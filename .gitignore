@@ -1,0 +1,18 @@
+# Mobile - Flutter
+beealert_mobile/.dart_tool/
+beealert_mobile/build/
+beealert_mobile/.flutter-plugins
+beealert_mobile/.flutter-plugins-dependencies
+beealert_mobile/.pub-cache/
+beealert_mobile/.packages
+beealert_mobile/pubspec.lock
+
+# Website - Node
+beealert-website/node_modules/
+beealert-website/dist/
+beealert-website/.env
+
+# General
+*.log
+.DS_Store
+Thumbs.db
