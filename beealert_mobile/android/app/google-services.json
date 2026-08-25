@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "69817565903",
+    "project_id": "ordinex-5cfa3",
+    "storage_bucket": "ordinex-5cfa3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69817565903:android:6efdea8f96bc9fca8b2dba",
+        "android_client_info": {
+          "package_name": "com.beealert.ordinex_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBso-qNc6w9d5ErfZ9wQWKGj0116Y1bdtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
