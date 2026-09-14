@@ -84,8 +84,28 @@ async function init() {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const section = link.dataset.section;
-      if (section) activateSection(section, user);
+      if (section) {
+        activateSection(section, user);
+        // Sync bottom nav active state
+        document.querySelectorAll('.admin-bottom-nav__btn').forEach(b =>
+          b.classList.toggle('is-active', b.dataset.section === section)
+        );
+      }
       closeSidebar();
+    });
+  });
+
+  // ── Bottom nav (mobile) ──────────────────────────────────────────────────
+  document.querySelectorAll('.admin-bottom-nav__btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.dataset.section;
+      if (section) {
+        activateSection(section, user);
+        // Sync active state on bottom nav
+        document.querySelectorAll('.admin-bottom-nav__btn').forEach(b =>
+          b.classList.toggle('is-active', b.dataset.section === section)
+        );
+      }
     });
   });
 
