@@ -1773,6 +1773,7 @@ select.form-input { padding-left: var(--space-4); }
 
 .residents-filters-bar {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   gap: var(--space-3);
   align-items: center;
