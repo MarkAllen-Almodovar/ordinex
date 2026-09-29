@@ -32,6 +32,14 @@
         { "fieldPath": "barangay",    "order": "ASCENDING"  },
         { "fieldPath": "submittedAt", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "admin_notifications",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "meta.barangay", "order": "ASCENDING"  },
+        { "fieldPath": "createdAt",     "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

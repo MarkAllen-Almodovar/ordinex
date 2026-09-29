@@ -197,11 +197,11 @@ export function init(container, uid, barangay) {
   // Mark all read
   document.getElementById('notif-mark-all')?.addEventListener('click', markAllRead);
 
-  // Firestore real-time listener
-  const q = query(
-    collection(db, 'admin_notifications'),
-    orderBy('createdAt', 'desc')
-  );
+  // Firestore real-time listener (filter by barangay for officials)
+  const q = barangay
+    ? query(collection(db, 'admin_notifications'), where('meta.barangay', '==', barangay), orderBy('createdAt', 'desc'))
+    : query(collection(db, 'admin_notifications'), orderBy('createdAt', 'desc'));
+
 
   unsubscribe = onSnapshot(q, (snap) => {
     allNotifs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
