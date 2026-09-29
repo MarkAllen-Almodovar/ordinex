@@ -1,7 +1,7 @@
-/**
+﻿/**
  * Barangay Official registration.
  * - Role is hardcoded as 'official'
- * - Status is 'pending' — requires admin confirmation before login
+ * - Status is 'pending' â€” requires admin confirmation before login
  * - Account is signed out immediately after creation
  */
 
@@ -9,14 +9,13 @@ import { createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'fir
 import { doc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../shared/firebase.js';
 
-// ── DOM refs ──────────────────────────────────────────────────────────────────
+// â”€â”€ DOM refs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const form          = document.getElementById('register-form');
 const nameInput     = document.getElementById('name-input');
 const emailInput    = document.getElementById('email-input');
 const phoneInput    = document.getElementById('phone-input');
 const barangayInput = document.getElementById('barangay-input');
-const addressInput  = document.getElementById('address-input');
 const passwordInput = document.getElementById('password-input');
 const confirmInput  = document.getElementById('confirm-input');
 const registerBtn   = document.getElementById('register-btn');
@@ -26,14 +25,13 @@ const nameError     = document.getElementById('name-error');
 const emailError    = document.getElementById('email-error');
 const phoneError    = document.getElementById('phone-error');
 const barangayError = document.getElementById('barangay-error');
-const addressError  = document.getElementById('address-error');
 const passwordError = document.getElementById('password-error');
 const confirmError  = document.getElementById('confirm-error');
 const togglePwdBtn  = document.getElementById('toggle-password');
 const eyeShow       = document.getElementById('eye-show');
 const eyeHide       = document.getElementById('eye-hide');
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function showErr(el, msg) { if (!el) return; el.textContent = msg; el.hidden = false; }
 function clearErr(el)     { if (!el) return; el.textContent = ''; el.hidden = true; }
@@ -44,10 +42,10 @@ function showAuthSuccess(msg) { if (authSuccess) { authSuccess.textContent = msg
 function setLoading(on) {
   if (!registerBtn) return;
   registerBtn.disabled = on;
-  registerBtn.textContent = on ? 'Creating account…' : 'Create Account';
+  registerBtn.textContent = on ? 'Creating accountâ€¦' : 'Create Account';
 }
 
-// ── Password toggle ───────────────────────────────────────────────────────────
+// â”€â”€ Password toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 togglePwdBtn?.addEventListener('click', () => {
   const visible = passwordInput.type === 'text';
@@ -57,7 +55,7 @@ togglePwdBtn?.addEventListener('click', () => {
   togglePwdBtn.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
 });
 
-// ── Validation ────────────────────────────────────────────────────────────────
+// â”€â”€ Validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function validate() {
   let valid = true;
@@ -82,10 +80,6 @@ function validate() {
   if (!barangay) { showErr(barangayError, 'Please select your barangay.'); valid = false; }
   else clearErr(barangayError);
 
-  const address = addressInput?.value.trim() ?? '';
-  if (!address) { showErr(addressError, 'Full address is required.'); valid = false; }
-  else clearErr(addressError);
-
   const password = passwordInput?.value ?? '';
   if (!password) { showErr(passwordError, 'Password is required.'); valid = false; }
   else if (password.length < 6) { showErr(passwordError, 'Password must be at least 6 characters.'); valid = false; }
@@ -99,13 +93,13 @@ function validate() {
   return valid;
 }
 
-// ── Title case helper ─────────────────────────────────────────────────────────
+// â”€â”€ Title case helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function toTitleCase(str) {
   return str.split(' ').map(w => w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w).join(' ');
 }
 
-// ── Register ──────────────────────────────────────────────────────────────────
+// â”€â”€ Register â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function handleRegister(e) {
   e.preventDefault();
@@ -118,24 +112,20 @@ async function handleRegister(e) {
     const name     = toTitleCase(nameInput.value.trim());
     const email    = emailInput.value.trim();
     const phone    = phoneInput.value.trim();
-    const barangay = barangayInput.value;
-    const address  = toTitleCase(addressInput.value.trim());
-    const password = passwordInput.value;
+    const barangay = barangayInput.value;    const password = passwordInput.value;
 
     // Create Firebase Auth account
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     const uid = credential.user.uid;
 
-    // Save profile — role: 'official', status: 'pending' (needs admin approval)
+    // Save profile â€” role: 'official', status: 'pending' (needs admin approval)
     await setDoc(doc(db, 'users', uid), {
       uid,
       fullName:    name,
       displayName: name,
       email,
       phoneNumber: phone,
-      barangay,
-      address,
-      role:        'official',
+      barangay,      role:        'official',
       status:      'pending',
       createdAt:   serverTimestamp(),
     });
@@ -150,7 +140,7 @@ async function handleRegister(e) {
       createdAt: serverTimestamp(),
     });
 
-    // Sign out immediately — must wait for admin approval
+    // Sign out immediately â€” must wait for admin approval
     await signOut(auth);
 
     form.reset();
@@ -165,7 +155,7 @@ async function handleRegister(e) {
   }
 }
 
-// ── Error messages ────────────────────────────────────────────────────────────
+// â”€â”€ Error messages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function errorMessage(code) {
   const map = {
@@ -177,7 +167,7 @@ function errorMessage(code) {
   return map[code] ?? 'Registration failed. Please try again.';
 }
 
-// ── Redirect if already signed in as admin ────────────────────────────────────
+// â”€â”€ Redirect if already signed in as admin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -192,13 +182,11 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// ── Event listeners ───────────────────────────────────────────────────────────
+// â”€â”€ Event listeners â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 form?.addEventListener('submit', handleRegister);
 nameInput?.addEventListener('input',      () => clearErr(nameError));
 emailInput?.addEventListener('input',     () => clearErr(emailError));
 phoneInput?.addEventListener('input',     () => clearErr(phoneError));
-barangayInput?.addEventListener('change', () => clearErr(barangayError));
-addressInput?.addEventListener('input',   () => clearErr(addressError));
-passwordInput?.addEventListener('input',  () => clearErr(passwordError));
+barangayInput?.addEventListener('change', () => clearErr(barangayError));passwordInput?.addEventListener('input',  () => clearErr(passwordError));
 confirmInput?.addEventListener('input',   () => clearErr(confirmError));
