@@ -1605,6 +1605,32 @@ select.form-input { padding-left: var(--space-4); }
   margin-bottom: var(--space-5);
 }
 
+.auth-card__footer-link {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-5);
+}
+
+.auth-link {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.form-success--block {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-4);
+}
+
 .otp-info {
   font-size: var(--font-size-sm);
   color: var(--color-success);
