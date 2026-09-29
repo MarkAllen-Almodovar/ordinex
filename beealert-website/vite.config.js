@@ -5,7 +5,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: 'index.html',
-        register: 'register.html',
         resident: 'resident.html',
         admin: 'admin.html',
         forgotPassword: 'forgot-password.html',
