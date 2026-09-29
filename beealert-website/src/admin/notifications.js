@@ -1,14 +1,14 @@
-/**
- * Admin Notifications — real-time feed of system events.
+﻿/**
+ * Admin Notifications â€” real-time feed of system events.
  *
  * Firestore collection: `admin_notifications`
  * Document fields:
- *   type        — 'new_signup' | 'new_report'
- *   title       — Short heading
- *   body        — Detail text
- *   read        — boolean (default false)
- *   createdAt   — serverTimestamp
- *   meta        — { userId?, reportId?, reportRef?, residentName? }
+ *   type        â€” 'new_signup' | 'new_report'
+ *   title       â€” Short heading
+ *   body        â€” Detail text
+ *   read        â€” boolean (default false)
+ *   createdAt   â€” serverTimestamp
+ *   meta        â€” { userId?, reportId?, reportRef?, residentName? }
  */
 
 import { db } from '../shared/firebase.js';
@@ -24,13 +24,13 @@ import {
 } from 'firebase/firestore';
 import { formatDate, showToast } from '../shared/ui-helpers.js';
 
-// ── Module state ─────────────────────────────────────────────────────────────
+// â”€â”€ Module state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 let unsubscribe    = null;
 let allNotifs      = [];
 let currentFilter  = 'all'; // 'all' | 'unread' | 'new_signup' | 'new_report'
 
-// ── HTML template ─────────────────────────────────────────────────────────────
+// â”€â”€ HTML template â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const SECTION_HTML = /* html */ `
 <div class="notif-section">
@@ -50,7 +50,7 @@ const SECTION_HTML = /* html */ `
 
   <div id="notif-list" class="notif-list"></div>
   <div id="notif-empty" class="notif-empty" hidden>
-    <span aria-hidden="true">🔔</span>
+    <span aria-hidden="true">ðŸ””</span>
     <p>No notifications yet.</p>
   </div>
   <div id="notif-skeleton" class="notif-skeleton" aria-hidden="true">
@@ -59,10 +59,10 @@ const SECTION_HTML = /* html */ `
 </div>
 `;
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function iconFor(type) {
-  return type === 'new_signup' ? '👤' : '📋';
+  return type === 'new_signup' ? 'ðŸ‘¤' : 'ðŸ“‹';
 }
 
 function applyFilter(notifs) {
@@ -72,7 +72,7 @@ function applyFilter(notifs) {
   return notifs;
 }
 
-// ── Render ────────────────────────────────────────────────────────────────────
+// â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function render() {
   const list    = document.getElementById('notif-list');
@@ -101,7 +101,7 @@ function render() {
     item.dataset.id = n.id;
 
     const ts = n.createdAt;
-    const dateStr = ts ? formatDate(ts) : '—';
+    const dateStr = ts ? formatDate(ts) : 'â€”';
 
     item.innerHTML = `
       <div class="notif-item__icon" aria-hidden="true">${iconFor(n.type)}</div>
@@ -169,9 +169,9 @@ function escHtml(str) {
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-// ── Public init ───────────────────────────────────────────────────────────────
+// â”€â”€ Public init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-export function init(container, uid) {
+export function init(container, uid, barangay) {
   allNotifs     = [];
   currentFilter = 'all';
   if (unsubscribe) { unsubscribe(); unsubscribe = null; }
@@ -213,7 +213,7 @@ export function init(container, uid) {
   });
 }
 
-// ── Exported helper (used by other admin modules) ─────────────────────────────
+// â”€â”€ Exported helper (used by other admin modules) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function writeAdminNotif(type, title, body, meta = {}) {
   try {

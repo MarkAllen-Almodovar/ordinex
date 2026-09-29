@@ -1,15 +1,15 @@
 ﻿/**
- * Admin Dashboard â€” stat cards, Chart.js charts, recent reports.
+ * Admin Dashboard �������� stat cards, Chart.js charts, recent reports.
  * Lazy-loaded by admin/app.js via `init(container, uid)`.
  *
  * Exports:
- *   computeStats(reports)     â†’ { total, pending, ongoing, completed }
- *   getRecentReports(reports) â†’ last 10 sorted by submittedAt desc
- *   init(container, uid)      â†’ subscribes to Firestore and renders UI
+ *   computeStats(reports)     �������� { total, pending, ongoing, completed }
+ *   getRecentReports(reports) �������� last 10 sorted by submittedAt desc
+ *   init(container, uid)      �������� subscribes to Firestore and renders UI
  */
 
 import { db } from '../shared/firebase.js';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore';
 import {
   statusBadge,
   formatDate,
@@ -20,7 +20,7 @@ import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
-// â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ���������������� Constants ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
 
 const CATEGORIES = [
   'Health',
@@ -35,7 +35,7 @@ const BAR_COLORS = ['#F97316', '#FB923C', '#F59E0B', '#10B981', '#3B82F6'];
 const LOADING_TIMEOUT_MS  = 3000;
 const RECENT_REPORTS_LIMIT = 10;
 
-// â”€â”€ Pure functions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ���������������� Pure functions ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
 
 export function computeStats(reports) {
   let pending = 0, ongoing = 0, completed = 0;
@@ -59,9 +59,9 @@ export function getRecentReports(reports) {
     .slice(0, RECENT_REPORTS_LIMIT);
 }
 
-/** Most-reported category in a set of reports. Returns 'â€”' when empty. */
+/** Most-reported category in a set of reports. Returns '��������' when empty. */
 function topCategory(reports) {
-  if (!reports.length) return 'â€”';
+  if (!reports.length) return '��������';
   const counts = {};
   for (const r of reports) {
     const c = r.category || 'Unknown';
@@ -70,7 +70,7 @@ function topCategory(reports) {
   return Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
 }
 
-// â”€â”€ Date helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ���������������� Date helpers ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
 
 function tsToDate(ts) {
   if (!ts) return null;
@@ -96,7 +96,7 @@ function filterByDateRange(reports, fromDate, toDateBound) {
   });
 }
 
-// â”€â”€ Dashboard HTML â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ���������������� Dashboard HTML ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
 
 const DASHBOARD_HTML = `
 <div class="dashboard">
@@ -144,7 +144,7 @@ const DASHBOARD_HTML = `
       <div class="stat-card__label">Completed</div>
     </div>
     <div class="stat-card stat-card--top">
-      <div class="stat-card__value stat-card__value--sm" id="stat-top-category">â€”</div>
+      <div class="stat-card__value stat-card__value--sm" id="stat-top-category">��������</div>
       <div class="stat-card__label">Top Category</div>
     </div>
   </div>
@@ -168,7 +168,7 @@ const DASHBOARD_HTML = `
 </div>
 `;
 
-// â”€â”€ Chart helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ���������������� Chart helpers ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
 
 function buildLastNDays(n) {
   const days = [];
@@ -229,13 +229,13 @@ function destroyChart(chartRef) {
   }
 }
 
-// â”€â”€ Chart state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ���������������� Chart state ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
 
 const lineChartRef = { current: null };
 const barChartRef  = { current: null };
 const pieChartRef  = { current: null };
 
-// â”€â”€ Render functions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ���������������� Render functions ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
 
 function updateStats(reports) {
   const stats = computeStats(reports);
@@ -369,25 +369,25 @@ function renderRecentReports(reports) {
     // Resident + report ref
     const tdResident = document.createElement('td');
     tdResident.className = 'resident-cell';
-    const name = escapeHtmlDash(report.userName ?? report.residentName ?? '—');
+    const name = escapeHtmlDash(report.userName ?? report.residentName ?? '���');
     const ref  = report.reportReference ? `<br><span class="resident-barangay">${escapeHtmlDash(report.reportReference)}</span>` : '';
     tdResident.innerHTML = `<span class="resident-name">${name}</span>${ref}`;
     tr.appendChild(tdResident);
 
     // Category
     const tdCat = document.createElement('td');
-    tdCat.textContent = report.category ?? '—';
+    tdCat.textContent = report.category ?? '���';
     tr.appendChild(tdCat);
 
     // Description (first 60 chars)
     const tdDesc = document.createElement('td');
     const desc = report.description ?? '';
-    tdDesc.textContent = desc.length > 60 ? desc.slice(0, 60) + '…' : desc;
+    tdDesc.textContent = desc.length > 60 ? desc.slice(0, 60) + '���' : desc;
     tr.appendChild(tdDesc);
 
     // Date
     const tdDate = document.createElement('td');
-    tdDate.textContent = report.submittedAt ? formatDate(report.submittedAt) : '—';
+    tdDate.textContent = report.submittedAt ? formatDate(report.submittedAt) : '���';
     tr.appendChild(tdDate);
 
     // Status
@@ -425,13 +425,13 @@ function updateRangeLabel(fromDate, toDate, filtered, total) {
     el.textContent = `Showing all ${total} report${total !== 1 ? 's' : ''}`;
   } else {
     const fmt = (d) => d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
-    const fromStr = fromDate ? fmt(fromDate) : 'â€”';
-    const toStr   = toDate   ? fmt(toDate)   : 'â€”';
-    el.textContent = `${fromStr} â†’ ${toStr}  Â·  ${filtered} report${filtered !== 1 ? 's' : ''}`;
+    const fromStr = fromDate ? fmt(fromDate) : '��������';
+    const toStr   = toDate   ? fmt(toDate)   : '��������';
+    el.textContent = `${fromStr} �������� ${toStr}  ����  ${filtered} report${filtered !== 1 ? 's' : ''}`;
   }
 }
 
-// â”€â”€ Preset ranges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ���������������� Preset ranges ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
 
 function presetRange(preset) {
   const now = new Date();
@@ -450,9 +450,9 @@ function presetRange(preset) {
   return { from, to };
 }
 
-// â”€â”€ Main init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ���������������� Main init ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
 
-export function init(container, uid) {
+export function init(container, uid, barangay) {
   container.innerHTML = DASHBOARD_HTML;
 
   // State
@@ -467,7 +467,7 @@ export function init(container, uid) {
     if (!firstSnapshotReceived) showLoadingOverlay();
   }, LOADING_TIMEOUT_MS);
 
-  // â”€â”€ Preset buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ���������������� Preset buttons ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
   container.querySelectorAll('.dash-preset-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       container.querySelectorAll('.dash-preset-btn').forEach(b => b.classList.remove('is-active'));
@@ -492,7 +492,7 @@ export function init(container, uid) {
     });
   });
 
-  // â”€â”€ Custom range Apply â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ���������������� Custom range Apply ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
   document.getElementById('dash-apply-range')?.addEventListener('click', () => {
     const fromVal = document.getElementById('dash-date-from')?.value;
     const toVal   = document.getElementById('dash-date-to')?.value;
@@ -514,14 +514,16 @@ export function init(container, uid) {
     renderAll(filtered, allReports, activeFrom, activeTo);
   });
 
-  // â”€â”€ Firestore listener â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Firestore listener (filtered by barangay for officials)
+  const reportsCol = barangay
+    ? query(collection(db, 'reports'), where('barangay', '==', barangay), orderBy('submittedAt', 'desc'))
+    : collection(db, 'reports');
   const unsubscribe = onSnapshot(
-    collection(db, 'reports'),
+    reportsCol,
     (snapshot) => {
       if (!firstSnapshotReceived) {
         firstSnapshotReceived = true;
         clearTimeout(loadingTimer);
-        hideLoadingOverlay();
       }
 
       allReports = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));

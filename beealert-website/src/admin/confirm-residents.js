@@ -1,16 +1,16 @@
 ﻿/**
- * Confirm Residents â€” admin section for approving or rejecting
+ * Confirm Residents �������� admin section for approving or rejecting
  * resident account registrations.
  *
  * Firestore structure assumed:
- *   users/{uid}  â†’  { displayName, fullName, email, barangay, address,
+ *   users/{uid}  ��������  { displayName, fullName, email, barangay, address,
  *                     phoneNumber, role: 'resident',
  *                     status: 'pending' | 'approved' | 'rejected',
  *                     createdAt, idImageUrl? }
  *
  * Admin actions:
- *   Approve â†’ sets status: 'approved'
- *   Reject  â†’ sets status: 'rejected'
+ *   Approve �������� sets status: 'approved'
+ *   Reject  �������� sets status: 'rejected'
  *
  * Lazy-loaded by admin/app.js via init(container, uid).
  */
@@ -85,12 +85,12 @@ const SECTION_HTML = /* html */ `
   <div class="residents-filters-bar">
     <!-- Search -->
     <div class="residents-search-wrap">
-      <span class="residents-search-icon" aria-hidden="true">ðŸ”</span>
+      <span class="residents-search-icon" aria-hidden="true">�������</span>
       <input
         type="search"
         id="residents-search"
         class="residents-search"
-        placeholder="Search by name, email or phoneâ€¦"
+        placeholder="Search by name, email or phone�������"
         autocomplete="off"
         aria-label="Search residents"
       />
@@ -170,7 +170,7 @@ const SECTION_HTML = /* html */ `
 
     <!-- Clear filters -->
     <button id="residents-clear-filters" class="btn residents-clear-btn" aria-label="Clear all filters">
-      âœ• Clear
+      ������� Clear
     </button>
   </div>
 
@@ -179,7 +179,7 @@ const SECTION_HTML = /* html */ `
 
   <!-- Empty state -->
   <div id="residents-empty" class="residents-empty" hidden>
-    <div class="residents-empty__icon" aria-hidden="true">ðŸ‘¥</div>
+    <div class="residents-empty__icon" aria-hidden="true">���������</div>
     <p class="residents-empty__text" id="residents-empty-text">No pending registrations.</p>
   </div>
 
@@ -211,7 +211,7 @@ function applyFilters() {
       if (!rBarangay.includes(currentBarangay.toLowerCase())) return false;
     }
 
-    // Date range â€” compare against createdAt
+    // Date range �������� compare against createdAt
     if (currentDateFrom || currentDateTo) {
       const ts = r.createdAt;
       if (!ts) return false;
@@ -221,7 +221,7 @@ function applyFilters() {
       if (currentDateTo   && day > currentDateTo)   return false;
     }
 
-    // Search â€” name, email, phone
+    // Search �������� name, email, phone
     if (needle) {
       const name  = (r.displayName ?? r.fullName ?? '').toLowerCase();
       const email = (r.email ?? '').toLowerCase();
@@ -242,7 +242,7 @@ function buildFilterSummary() {
   if (currentDateFrom) parts.push(`From: ${currentDateFrom}`);
   if (currentDateTo)   parts.push(`To: ${currentDateTo}`);
   if (currentSearch)   parts.push(`Search: "${currentSearch}"`);
-  return parts.join(' Â· ');
+  return parts.join(' ���� ');
 }
 
 // ---------------------------------------------------------------------------
@@ -256,7 +256,7 @@ function buildCard(resident) {
   card.dataset.uid = resident.id;
 
   const status      = resident.status ?? 'pending';
-  const displayName = resident.displayName ?? resident.fullName ?? 'â€”';
+  const displayName = resident.displayName ?? resident.fullName ?? '��������';
   const safeName    = escapeHtml(displayName);
   const uid         = resident.id;
 
@@ -266,7 +266,7 @@ function buildCard(resident) {
          <span class="resident-card__id-overlay">Click to view full size</span>
        </a>`
     : `<div class="resident-card__id-missing">
-         <span class="resident-card__id-missing-icon" aria-hidden="true">ðŸªª</span>
+         <span class="resident-card__id-missing-icon" aria-hidden="true">��������</span>
          <span>No ID uploaded yet</span>
        </div>`;
 
@@ -281,8 +281,8 @@ function buildCard(resident) {
           ${resident.role === 'official' ? 'B. Official' : 'Resident'}
         </p>
         <p class="resident-card__meta resident-card__email">
-          <span class="resident-card__meta-icon" aria-hidden="true">âœ‰</span>
-          ${escapeHtml(resident.email ?? 'â€”')}
+          <span class="resident-card__meta-icon" aria-hidden="true">�������</span>
+          ${escapeHtml(resident.email ?? '��������')}
         </p>
       </div>
       <div class="resident-card__status">
@@ -293,26 +293,26 @@ function buildCard(resident) {
     <div class="resident-card__body">
       <div class="resident-card__details">
         <p class="resident-card__meta resident-card__phone">
-          <span class="resident-card__meta-icon" aria-hidden="true">ðŸ“ž</span>
-          ${escapeHtml(resident.phoneNumber ?? 'â€”')}
+          <span class="resident-card__meta-icon" aria-hidden="true">���������</span>
+          ${escapeHtml(resident.phoneNumber ?? '��������')}
         </p>
         <p class="resident-card__meta resident-card__barangay-row">
-          <span class="resident-card__meta-icon" aria-hidden="true">ðŸ˜</span>
-          Brgy. ${escapeHtml(resident.barangay ?? 'â€”')}
+          <span class="resident-card__meta-icon" aria-hidden="true">������</span>
+          Brgy. ${escapeHtml(resident.barangay ?? '��������')}
         </p>
         <p class="resident-card__meta resident-card__address">
-          <span class="resident-card__meta-icon" aria-hidden="true">ðŸ“</span>
-          ${escapeHtml(resident.address ?? 'â€”')}
+          <span class="resident-card__meta-icon" aria-hidden="true">�������</span>
+          ${escapeHtml(resident.address ?? '��������')}
         </p>
         <p class="resident-card__date">
-          <span class="resident-card__meta-icon" aria-hidden="true">ðŸ—“</span>
+          <span class="resident-card__meta-icon" aria-hidden="true">����������</span>
           Registered: ${formatDate(resident.createdAt)}
         </p>
       </div>
 
       <div class="resident-card__id-section">
         <p class="resident-card__id-label">
-          <span aria-hidden="true">ðŸªª</span> Valid ID
+          <span aria-hidden="true">��������</span> Valid ID
         </p>
         ${idThumb}
       </div>
@@ -322,10 +322,10 @@ function buildCard(resident) {
       ${
         status === 'pending'
           ? `<button class="btn btn--approve" data-action="approve" data-uid="${uid}" aria-label="Approve ${safeName}">
-               âœ“ Confirm
+               ������� Confirm
              </button>
              <button class="btn btn--reject" data-action="reject" data-uid="${uid}" aria-label="Reject ${safeName}">
-               âœ• Reject
+               ������� Reject
              </button>`
           : status === 'approved'
           ? `<button class="btn btn--reject" data-action="reject" data-uid="${uid}" aria-label="Revoke approval for ${safeName}">
@@ -361,7 +361,7 @@ function render() {
   const summaryText = buildFilterSummary();
   if (summary) {
     if (summaryText) {
-      summary.textContent = `Showing ${filtered.length} result${filtered.length !== 1 ? 's' : ''} Â· ${summaryText}`;
+      summary.textContent = `Showing ${filtered.length} result${filtered.length !== 1 ? 's' : ''} ���� ${summaryText}`;
       summary.hidden = false;
     } else {
       summary.hidden = true;
@@ -427,7 +427,7 @@ async function handleAction(uid, action, adminUid) {
     const residentName = resident?.displayName ?? resident?.fullName ?? 'A resident';
     const barangay     = resident?.barangay ?? '';
 
-    // Admin notification â€” logged for the admin feed
+    // Admin notification �������� logged for the admin feed
     await notifyAdmin(
       'new_signup',
       action === 'approve'
@@ -439,10 +439,10 @@ async function handleAction(uid, action, adminUid) {
       { userId: uid, residentName }
     );
 
-    // Resident notification â€” they see this in their alerts tab
+    // Resident notification �������� they see this in their alerts tab
     await addDoc(collection(db, 'users', uid, 'notifications'), {
       type: action === 'approve' ? 'account_approved' : 'account_rejected',
-      title: action === 'approve' ? 'âœ… Account Approved' : 'âŒ Registration Rejected',
+      title: action === 'approve' ? '������� Account Approved' : '���� Registration Rejected',
       body: action === 'approve'
         ? 'Your BEE-Alert account has been approved. You can now log in and submit reports.'
         : 'Your BEE-Alert registration was not approved. Please contact the municipal office.',
@@ -481,7 +481,7 @@ function escapeHtml(str) {
 }
 
 function formatDate(ts) {
-  if (!ts) return 'â€”';
+  if (!ts) return '��������';
   const date = typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
   return date.toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' });
 }
@@ -505,7 +505,7 @@ function debounce(fn, ms) {
 // Public init
 // ---------------------------------------------------------------------------
 
-export function init(container, uid) {
+export function init(container, uid, barangay) {
   // Reset state
   allResidents     = [];
   currentFilter    = 'pending';
@@ -520,7 +520,7 @@ export function init(container, uid) {
   const skeleton = document.getElementById('residents-skeleton');
   if (skeleton) skeleton.hidden = false;
 
-  // â”€â”€ Status tab clicks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ���������������� Status tab clicks ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
   container.querySelectorAll('.resident-filter-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       currentFilter = tab.dataset.filter;
@@ -533,21 +533,21 @@ export function init(container, uid) {
     });
   });
 
-  // â”€â”€ Search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ���������������� Search ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
   const searchInput = document.getElementById('residents-search');
   searchInput?.addEventListener('input', debounce(e => {
     currentSearch = e.target.value;
     render();
   }, 250));
 
-  // â”€â”€ Barangay filter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ���������������� Barangay filter ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
   const barangaySelect = document.getElementById('residents-barangay');
   barangaySelect?.addEventListener('change', e => {
     currentBarangay = e.target.value;
     render();
   });
 
-  // â”€â”€ Date filters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ���������������� Date filters ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
   document.getElementById('residents-date-from')?.addEventListener('change', e => {
     currentDateFrom = e.target.value;
     render();
@@ -557,7 +557,7 @@ export function init(container, uid) {
     render();
   });
 
-  // â”€â”€ Clear filters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ���������������� Clear filters ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
   document.getElementById('residents-clear-filters')?.addEventListener('click', () => {
     currentSearch   = '';
     currentBarangay = '';
@@ -574,7 +574,7 @@ export function init(container, uid) {
     render();
   });
 
-  // â”€â”€ Action button clicks (event delegation) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ���������������� Action button clicks (event delegation) ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
   const grid = document.getElementById('residents-grid');
   grid?.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-action]');
@@ -584,19 +584,19 @@ export function init(container, uid) {
     if (action && residentUid) handleAction(residentUid, action, uid);
   });
 
-  // â”€â”€ Firestore real-time listener â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  // Firestore real-time listener
-  const residentsQuery = query(
-    collection(db, 'users'),
-    where('role', 'in', ['resident', 'official']),
-    orderBy('createdAt', 'desc')
-  );
+
+  // Firestore real-time listener (filtered by barangay for officials)
+  const residentsQuery = barangay
+    ? query(collection(db, 'users'), where('barangay', '==', barangay), where('role', 'in', ['resident', 'official']), orderBy('createdAt', 'desc'))
+    : query(collection(db, 'users'), where('role', 'in', ['resident', 'official']), orderBy('createdAt', 'desc'));
+
   unsubscribe = onSnapshot(
     residentsQuery,
     (snapshot) => {
       // Detect genuinely new documents (not initial load)
       const isInitialLoad = allResidents.length === 0;
       const previousIds = new Set(allResidents.map(r => r.id));
+
 
       allResidents = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
 
