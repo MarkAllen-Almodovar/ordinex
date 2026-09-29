@@ -13,8 +13,10 @@ async function isAdminUser(uid) {
   try {
     const snap = await getDoc(doc(db, 'users', uid));
     if (!snap.exists()) return false;
-    const role = snap.data()?.role ?? '';
-    return ALLOWED_ROLES.includes(role);
+    const data   = snap.data() ?? {};
+    const role   = data.role   ?? '';
+    const status = data.status ?? 'approved';
+    return ALLOWED_ROLES.includes(role) && status !== 'pending';
   } catch {
     return false;
   }

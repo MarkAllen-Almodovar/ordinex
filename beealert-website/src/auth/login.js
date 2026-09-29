@@ -91,8 +91,13 @@ async function isAdminUser(uid) {
   try {
     const snap = await getDoc(doc(db, 'users', uid));
     if (!snap.exists()) return false;
-    const role = snap.data()?.role ?? '';
-    return ALLOWED_ROLES.includes(role);
+    const data = snap.data() ?? {};
+    const role   = data.role   ?? '';
+    const status = data.status ?? 'approved';
+    // Must have correct role AND be approved (not pending)
+    if (!ALLOWED_ROLES.includes(role)) return false;
+    if (status === 'pending') return 'pending';
+    return true;
   } catch {
     return false;
   }
@@ -119,8 +124,13 @@ async function handleLogin(e) {
 
     // Check role before allowing access
     const allowed = await isAdminUser(credential.user.uid);
+    if (allowed === 'pending') {
+      await signOut(auth);
+      showAuthError('Your account is pending approval by the admin. Please wait for confirmation.');
+      setLoading(false);
+      return;
+    }
     if (!allowed) {
-      // Sign them back out immediately and show an error
       await signOut(auth);
       showAuthError('Access denied. This portal is for authorized officials only.');
       setLoading(false);

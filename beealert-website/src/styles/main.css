@@ -169,6 +169,7 @@ fieldset {
   overflow: hidden;
   width: 100%;
 }
+.auth-card--wide { max-width: 520px; }
 
 /* Card gradient header */
 .auth-card__header {
