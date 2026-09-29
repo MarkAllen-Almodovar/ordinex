@@ -1,5 +1,5 @@
 ﻿/**
- * Admin login â€” Firebase Email + Password Auth.
+ * Admin login  Firebase Email + Password Auth.
  */
 
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -34,7 +34,7 @@ function clearAuthError()   { if (!authError) return; authError.textContent = ''
 function setLoading(loading) {
   if (!loginBtn) return;
   loginBtn.disabled = loading;
-  loginBtn.textContent = loading ? 'Signing inâ€¦' : 'Sign In';
+  loginBtn.textContent = loading ? 'Signing in' : 'Sign In';
 }
 
 // ---------------------------------------------------------------------------
@@ -82,7 +82,7 @@ function validate() {
 }
 
 // ---------------------------------------------------------------------------
-// Role check â€” only 'admin' or 'official' roles can access the admin panel
+// Role check  only 'admin' or 'official' roles can access the admin panel
 // ---------------------------------------------------------------------------
 
 const ALLOWED_ROLES = ['admin', 'official'];
@@ -137,7 +137,7 @@ async function handleLogin(e) {
       return;
     }
 
-    // Role is valid â€” onAuthStateChanged will redirect
+    // Role is valid  onAuthStateChanged will redirect
   } catch (err) {
     console.error('[login] error:', err);
     showAuthError(errorMessage(err.code));
@@ -146,7 +146,7 @@ async function handleLogin(e) {
 }
 
 // ---------------------------------------------------------------------------
-// Auth state â€” redirect to admin if already signed in
+// Auth state  redirect to admin if already signed in
 // ---------------------------------------------------------------------------
 
 onAuthStateChanged(auth, async (user) => {
@@ -155,7 +155,7 @@ onAuthStateChanged(auth, async (user) => {
     if (allowed) {
       window.location.href = '/admin.html';
     } else {
-      // Resident somehow on this page â€” sign out silently
+      // Resident somehow on this page  sign out silently
       await signOut(auth);
     }
   }
