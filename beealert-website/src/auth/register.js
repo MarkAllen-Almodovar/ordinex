@@ -1,15 +1,15 @@
 ﻿/**
  * Barangay Official registration.
- * - Role is hardcoded as 'official'
- * - Status is 'pending' â€” requires admin confirmation before login
- * - Account is signed out immediately after creation
+ * - Role hardcoded as 'official'
+ * - Status 'pending' — requires admin confirmation before login
+ * - Valid ID uploaded to Cloudinary, URL saved to Firestore
  */
 
 import { createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../shared/firebase.js';
 
-// â”€â”€ DOM refs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── DOM refs ──────────────────────────────────────────────────────────────────
 
 const form          = document.getElementById('register-form');
 const nameInput     = document.getElementById('name-input');
@@ -18,6 +18,10 @@ const phoneInput    = document.getElementById('phone-input');
 const barangayInput = document.getElementById('barangay-input');
 const passwordInput = document.getElementById('password-input');
 const confirmInput  = document.getElementById('confirm-input');
+const idUploadZone  = document.getElementById('id-upload-zone');
+const idFileInput   = document.getElementById('id-upload');
+const idPreview     = document.getElementById('id-upload-preview');
+const idError       = document.getElementById('id-error');
 const registerBtn   = document.getElementById('register-btn');
 const authError     = document.getElementById('auth-error');
 const authSuccess   = document.getElementById('auth-success');
@@ -31,7 +35,7 @@ const togglePwdBtn  = document.getElementById('toggle-password');
 const eyeShow       = document.getElementById('eye-show');
 const eyeHide       = document.getElementById('eye-hide');
 
-// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function showErr(el, msg) { if (!el) return; el.textContent = msg; el.hidden = false; }
 function clearErr(el)     { if (!el) return; el.textContent = ''; el.hidden = true; }
@@ -42,10 +46,10 @@ function showAuthSuccess(msg) { if (authSuccess) { authSuccess.textContent = msg
 function setLoading(on) {
   if (!registerBtn) return;
   registerBtn.disabled = on;
-  registerBtn.textContent = on ? 'Creating accountâ€¦' : 'Create Account';
+  registerBtn.textContent = on ? 'Creating account\u2026' : 'Create Account';
 }
 
-// â”€â”€ Password toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Password toggle ───────────────────────────────────────────────────────────
 
 togglePwdBtn?.addEventListener('click', () => {
   const visible = passwordInput.type === 'text';
@@ -55,7 +59,66 @@ togglePwdBtn?.addEventListener('click', () => {
   togglePwdBtn.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
 });
 
-// â”€â”€ Validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── ID upload ─────────────────────────────────────────────────────────────────
+
+let idFile = null;
+
+const PLACEHOLDER_HTML = `
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+    <circle cx="12" cy="13" r="4"/>
+  </svg>
+  <p class="id-upload-text">Click or drag to upload your Valid ID</p>
+  <p class="id-upload-hint">JPG, PNG &mdash; required</p>
+`;
+
+function setIdFile(f) {
+  idFile = f;
+  if (!idPreview) return;
+  idPreview.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = URL.createObjectURL(f);
+  img.style.cssText = 'width:100%;max-height:160px;object-fit:cover;border-radius:8px;';
+  idPreview.appendChild(img);
+  const rm = document.createElement('button');
+  rm.type = 'button';
+  rm.textContent = '\u2715 Remove';
+  rm.style.cssText = 'margin-top:8px;font-size:12px;background:none;border:none;color:#6B7280;cursor:pointer;';
+  rm.addEventListener('click', (e) => { e.stopPropagation(); clearIdFile(); });
+  idPreview.appendChild(rm);
+  if (idError) { idError.textContent = ''; idError.hidden = true; }
+}
+
+function clearIdFile() {
+  idFile = null;
+  if (idFileInput) idFileInput.value = '';
+  if (idPreview) idPreview.innerHTML = PLACEHOLDER_HTML;
+}
+
+idUploadZone?.addEventListener('click', () => idFileInput?.click());
+idUploadZone?.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') idFileInput?.click(); });
+idUploadZone?.addEventListener('dragover', (e) => { e.preventDefault(); idUploadZone.classList.add('id-upload-zone--drag'); });
+idUploadZone?.addEventListener('dragleave', () => idUploadZone?.classList.remove('id-upload-zone--drag'));
+idUploadZone?.addEventListener('drop', (e) => {
+  e.preventDefault();
+  idUploadZone.classList.remove('id-upload-zone--drag');
+  if (e.dataTransfer.files[0]) setIdFile(e.dataTransfer.files[0]);
+});
+idFileInput?.addEventListener('change', () => { if (idFileInput.files[0]) setIdFile(idFileInput.files[0]); });
+
+// ── Cloudinary upload ─────────────────────────────────────────────────────────
+
+async function uploadIdToCloudinary(file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', 'beealert_uploads');
+  fd.append('folder', 'user_ids');
+  const res = await fetch('https://api.cloudinary.com/v1_1/zq9gopfc/upload', { method: 'POST', body: fd });
+  if (!res.ok) throw new Error('Upload failed: ' + res.statusText);
+  return (await res.json()).secure_url;
+}
+
+// ── Validation ────────────────────────────────────────────────────────────────
 
 function validate() {
   let valid = true;
@@ -90,16 +153,18 @@ function validate() {
   else if (confirm !== password) { showErr(confirmError, 'Passwords do not match.'); valid = false; }
   else clearErr(confirmError);
 
+  if (!idFile) { showErr(idError, 'Please upload a valid ID photo.'); valid = false; }
+
   return valid;
 }
 
-// â”€â”€ Title case helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Title case ────────────────────────────────────────────────────────────────
 
 function toTitleCase(str) {
   return str.split(' ').map(w => w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w).join(' ');
 }
 
-// â”€â”€ Register â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Register ──────────────────────────────────────────────────────────────────
 
 async function handleRegister(e) {
   e.preventDefault();
@@ -112,25 +177,31 @@ async function handleRegister(e) {
     const name     = toTitleCase(nameInput.value.trim());
     const email    = emailInput.value.trim();
     const phone    = phoneInput.value.trim();
-    const barangay = barangayInput.value;    const password = passwordInput.value;
+    const barangay = barangayInput.value;
+    const password = passwordInput.value;
+
+    // Upload ID photo first
+    const idImageUrl = await uploadIdToCloudinary(idFile);
 
     // Create Firebase Auth account
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     const uid = credential.user.uid;
 
-    // Save profile â€” role: 'official', status: 'pending' (needs admin approval)
+    // Save profile — role: 'official', status: 'pending'
     await setDoc(doc(db, 'users', uid), {
       uid,
       fullName:    name,
       displayName: name,
       email,
       phoneNumber: phone,
-      barangay,      role:        'official',
+      barangay,
+      role:        'official',
       status:      'pending',
+      idImageUrl,
       createdAt:   serverTimestamp(),
     });
 
-    // Write admin notification
+    // Admin notification
     await addDoc(collection(db, 'admin_notifications'), {
       type:  'new_signup',
       title: 'New Official Sign-Up: ' + name,
@@ -140,22 +211,23 @@ async function handleRegister(e) {
       createdAt: serverTimestamp(),
     });
 
-    // Sign out immediately â€” must wait for admin approval
+    // Sign out — must wait for admin approval
     await signOut(auth);
 
     form.reset();
-    showAuthSuccess('Account created! Your account is pending approval by the admin. You will be able to sign in once approved.');
+    clearIdFile();
+    showAuthSuccess('Account created! Your account is pending approval by the admin. You will be notified once approved.');
     setLoading(false);
 
     setTimeout(() => { window.location.href = '/index.html'; }, 4000);
   } catch (err) {
     console.error('[register]', err);
-    showAuthError(errorMessage(err.code));
+    showAuthError(errorMessage(err.code) ?? err.message ?? 'Registration failed. Please try again.');
     setLoading(false);
   }
 }
 
-// â”€â”€ Error messages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Error messages ────────────────────────────────────────────────────────────
 
 function errorMessage(code) {
   const map = {
@@ -164,10 +236,10 @@ function errorMessage(code) {
     'auth/weak-password':          'Password is too weak. Use at least 6 characters.',
     'auth/network-request-failed': 'Network error. Check your connection.',
   };
-  return map[code] ?? 'Registration failed. Please try again.';
+  return map[code];
 }
 
-// â”€â”€ Redirect if already signed in as admin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Redirect if already approved admin ───────────────────────────────────────
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -182,11 +254,12 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// â”€â”€ Event listeners â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Event listeners ───────────────────────────────────────────────────────────
 
 form?.addEventListener('submit', handleRegister);
 nameInput?.addEventListener('input',      () => clearErr(nameError));
 emailInput?.addEventListener('input',     () => clearErr(emailError));
 phoneInput?.addEventListener('input',     () => clearErr(phoneError));
-barangayInput?.addEventListener('change', () => clearErr(barangayError));passwordInput?.addEventListener('input',  () => clearErr(passwordError));
+barangayInput?.addEventListener('change', () => clearErr(barangayError));
+passwordInput?.addEventListener('input',  () => clearErr(passwordError));
 confirmInput?.addEventListener('input',   () => clearErr(confirmError));

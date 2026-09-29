@@ -1613,6 +1613,27 @@ select.form-input { padding-left: var(--space-4); }
   margin-top: var(--space-5);
 }
 
+/* ID upload zone (admin signup) */
+.id-upload-zone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+  cursor: pointer;
+  background: var(--color-surface-alt);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.id-upload-zone:hover,
+.id-upload-zone:focus,
+.id-upload-zone--drag {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+  outline: none;
+}
+.id-upload-preview { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+.id-upload-text { font-size: var(--font-size-sm); font-weight: 600; color: var(--color-text); margin: 0; }
+.id-upload-hint { font-size: var(--font-size-xs); color: var(--color-text-muted); margin: 0; }
+
 .auth-link {
   color: var(--color-primary);
   font-weight: 600;

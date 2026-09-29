@@ -170,6 +170,24 @@
             <span class="form-error" id="confirm-error" role="alert" aria-live="polite" hidden></span>
           </div>
 
+
+          <!-- Valid ID Upload -->
+          <div class='form-group'>
+            <label class='form-label' for='id-upload'>Valid ID <span style='color:red'>*</span></label>
+            <div class='id-upload-zone' id='id-upload-zone' tabindex='0' role='button' aria-label='Upload valid ID'>
+              <input type='file' id='id-upload' accept='image/*' style='display:none' aria-hidden='true' />
+              <div id='id-upload-preview' class='id-upload-preview'>
+                <svg width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' aria-hidden='true'>
+                  <path d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/>
+                  <circle cx='12' cy='13' r='4'/>
+                </svg>
+                <p class='id-upload-text'>Click or drag to upload your Valid ID</p>
+                <p class='id-upload-hint'>JPG, PNG &mdash; required</p>
+              </div>
+            </div>
+            <span class='form-error' id='id-error' role='alert' aria-live='polite' hidden></span>
+          </div>
+
           <button class="btn btn--primary btn--full" type="submit" id="register-btn">
             Create Account
           </button>
