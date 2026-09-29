@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+﻿import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
@@ -19,7 +19,7 @@ const firebaseConfig = {
 // Initialize Firebase app singleton
 const app = initializeApp(firebaseConfig);
 
-// Export service singletons — import these throughout the app instead of
+// Export service singletons  import these throughout the app instead of
 // calling initializeApp / getAuth / getFirestore / getStorage again.
 export const auth = getAuth(app);
 export const db = getFirestore(app);

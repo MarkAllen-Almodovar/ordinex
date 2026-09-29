@@ -1,4 +1,4 @@
-import {
+﻿import {
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
@@ -55,14 +55,14 @@ export async function handleSocialLogin(providerName) {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // ── Check whether a Firestore user document already exists ───────────────
+    //  Check whether a Firestore user document already exists 
     const userRef = doc(db, 'users', user.uid);
     const snap = await getDoc(userRef);
 
     let role;
 
     if (!snap.exists()) {
-      // New user — create a Firestore document with default role 'resident'
+      // New user  create a Firestore document with default role 'resident'
       const newUserData = {
         fullName: user.displayName || '',
         email: user.email || '',
@@ -74,11 +74,11 @@ export async function handleSocialLogin(providerName) {
       await setDoc(userRef, newUserData);
       role = 'resident';
     } else {
-      // Existing user — read their stored role
+      // Existing user  read their stored role
       role = snap.data()?.role ?? 'resident';
     }
 
-    // ── Redirect to the role-appropriate dashboard ────────────────────────────
+    //  Redirect to the role-appropriate dashboard 
     window.location.href = role === 'official' ? '/admin.html' : '/resident.html';
   } catch (err) {
     // Ignore popup-cancelled errors silently (user closed the popup)

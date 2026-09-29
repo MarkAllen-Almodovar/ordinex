@@ -50,7 +50,7 @@ const SECTION_HTML = /* html */ `
 
   <div id="notif-list" class="notif-list"></div>
   <div id="notif-empty" class="notif-empty" hidden>
-    <span aria-hidden="true">ðŸ</span>
+    <span aria-hidden="true"></span>
     <p>No notifications yet.</p>
   </div>
   <div id="notif-skeleton" class="notif-skeleton" aria-hidden="true">
@@ -62,7 +62,7 @@ const SECTION_HTML = /* html */ `
 //  Helpers 
 
 function iconFor(type) {
-  return type === 'new_signup' ? 'ðŸ¤' : 'ðŸ';
+  return type === 'new_signup' ? '' : '';
 }
 
 function applyFilter(notifs) {

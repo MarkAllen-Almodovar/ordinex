@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Shared UI helper utilities for BEE-Alerta.
  *
  * These are pure DOM/utility functions with no Firebase or framework dependencies.
@@ -43,7 +43,7 @@ export function statusBadge(status) {
  * @returns {string} Date formatted as "Mon DD, YYYY" (e.g. "Jan 15, 2025").
  */
 export function formatDate(timestamp) {
-  // Convert Firestore Timestamp → Date if needed
+  // Convert Firestore Timestamp  Date if needed
   const date =
     timestamp && typeof timestamp.toDate === 'function'
       ? timestamp.toDate()
@@ -89,7 +89,7 @@ export function showToast(message, type = 'success') {
   const closeBtn = document.createElement('button');
   closeBtn.className = 'toast__close';
   closeBtn.setAttribute('aria-label', 'Dismiss notification');
-  closeBtn.textContent = '×';
+  closeBtn.textContent = '';
 
   const dismiss = () => {
     toast.classList.add('toast--dismissing');

@@ -1,7 +1,7 @@
 ﻿/**
  * Barangay Official registration.
  * - Role hardcoded as 'official'
- * - Status 'pending' — requires admin confirmation before login
+ * - Status 'pending'  requires admin confirmation before login
  * - Valid ID uploaded to Cloudinary, URL saved to Firestore
  */
 
@@ -9,7 +9,7 @@ import { createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'fir
 import { doc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../shared/firebase.js';
 
-// ── DOM refs ──────────────────────────────────────────────────────────────────
+//  DOM refs 
 
 const form          = document.getElementById('register-form');
 const nameInput     = document.getElementById('name-input');
@@ -35,7 +35,7 @@ const togglePwdBtn  = document.getElementById('toggle-password');
 const eyeShow       = document.getElementById('eye-show');
 const eyeHide       = document.getElementById('eye-hide');
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+//  Helpers 
 
 function showErr(el, msg) { if (!el) return; el.textContent = msg; el.hidden = false; }
 function clearErr(el)     { if (!el) return; el.textContent = ''; el.hidden = true; }
@@ -49,7 +49,7 @@ function setLoading(on) {
   registerBtn.textContent = on ? 'Creating account\u2026' : 'Create Account';
 }
 
-// ── Password toggle ───────────────────────────────────────────────────────────
+//  Password toggle 
 
 togglePwdBtn?.addEventListener('click', () => {
   const visible = passwordInput.type === 'text';
@@ -59,7 +59,7 @@ togglePwdBtn?.addEventListener('click', () => {
   togglePwdBtn.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
 });
 
-// ── ID upload ─────────────────────────────────────────────────────────────────
+//  ID upload 
 
 let idFile = null;
 
@@ -106,7 +106,7 @@ idUploadZone?.addEventListener('drop', (e) => {
 });
 idFileInput?.addEventListener('change', () => { if (idFileInput.files[0]) setIdFile(idFileInput.files[0]); });
 
-// ── Cloudinary upload ─────────────────────────────────────────────────────────
+//  Cloudinary upload 
 
 async function uploadIdToCloudinary(file) {
   const fd = new FormData();
@@ -118,7 +118,7 @@ async function uploadIdToCloudinary(file) {
   return (await res.json()).secure_url;
 }
 
-// ── Validation ────────────────────────────────────────────────────────────────
+//  Validation 
 
 function validate() {
   let valid = true;
@@ -158,13 +158,13 @@ function validate() {
   return valid;
 }
 
-// ── Title case ────────────────────────────────────────────────────────────────
+//  Title case 
 
 function toTitleCase(str) {
   return str.split(' ').map(w => w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w).join(' ');
 }
 
-// ── Register ──────────────────────────────────────────────────────────────────
+//  Register 
 
 async function handleRegister(e) {
   e.preventDefault();
@@ -187,7 +187,7 @@ async function handleRegister(e) {
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     const uid = credential.user.uid;
 
-    // Save profile — role: 'official', status: 'pending'
+    // Save profile  role: 'official', status: 'pending'
     await setDoc(doc(db, 'users', uid), {
       uid,
       fullName:    name,
@@ -211,7 +211,7 @@ async function handleRegister(e) {
       createdAt: serverTimestamp(),
     });
 
-    // Sign out — must wait for admin approval
+    // Sign out  must wait for admin approval
     await signOut(auth);
 
     form.reset();
@@ -227,7 +227,7 @@ async function handleRegister(e) {
   }
 }
 
-// ── Error messages ────────────────────────────────────────────────────────────
+//  Error messages 
 
 function errorMessage(code) {
   const map = {
@@ -239,7 +239,7 @@ function errorMessage(code) {
   return map[code];
 }
 
-// ── Redirect if already approved admin ───────────────────────────────────────
+//  Redirect if already approved admin 
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -254,7 +254,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// ── Event listeners ───────────────────────────────────────────────────────────
+//  Event listeners 
 
 form?.addEventListener('submit', handleRegister);
 nameInput?.addEventListener('input',      () => clearErr(nameError));

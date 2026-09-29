@@ -25,7 +25,7 @@ import {
 } from 'firebase/firestore';
 import { statusBadge, formatDate, showToast } from '../shared/ui-helpers.js';
 
-// ������ Notification helper ���������������������������������������������������������������������������������������������������������������������������������������������������������������������
+//  Notification helper 
 
 async function notifyAdmin(type, title, body, meta = {}) {
   try {
@@ -200,19 +200,19 @@ function buildRow(report, rowNum) {
   tdNum.textContent = rowNum;
   tr.appendChild(tdNum);
 
-  // Resident cell ��� clicking the row opens detail modal
+  // Resident cell  clicking the row opens detail modal
   const tdResident = document.createElement('td');
   tdResident.className = 'resident-cell';
-  const residentName = report.userName ?? report.residentName ?? '���';
+  const residentName = report.userName ?? report.residentName ?? '';
   const safeRef = report.reportReference ? `<br><span class="resident-barangay">${escapeHtml(report.reportReference)}</span>` : '';
   tdResident.innerHTML = `<span class="resident-name">${escapeHtml(residentName)}</span>${safeRef}`;
   tr.appendChild(tdResident);
 
-  // Category cell ��� click directly to change
+  // Category cell  click directly to change
   const tdCategory = document.createElement('td');
   tdCategory.className = 'category-cell category-cell--clickable';
   tdCategory.title = 'Click to change category';
-  tdCategory.innerHTML = "<span class='cell-text'>" + escapeHtml(report.category ?? '���') + "</span> <span class='cell-arrow' aria-hidden='true'>&#9660;</span>";
+  tdCategory.innerHTML = "<span class='cell-text'>" + escapeHtml(report.category ?? '') + "</span> <span class='cell-arrow' aria-hidden='true'>&#9660;</span>";
   tdCategory.addEventListener('click', (e) => {
     e.stopPropagation();
     showInlineCategorySelect(report, tdCategory);
@@ -227,24 +227,24 @@ function buildRow(report, rowNum) {
 
   // Date
   const tdDate = document.createElement('td');
-  tdDate.textContent = report.submittedAt ? formatDate(report.submittedAt) : '���';
+  tdDate.textContent = report.submittedAt ? formatDate(report.submittedAt) : '';
   tr.appendChild(tdDate);
 
   // Evidence thumbnail
-  // Evidence cell ��� icons only (photo/video/none)
+  // Evidence cell  icons only (photo/video/none)
   const tdImage = document.createElement('td');
   const ph = document.createElement('span');
   ph.className = 'thumb-placeholder';
   if (report.imageUrl) {
-    ph.title = 'Photo evidence ��� click row to view full details';
-    ph.textContent = String.fromCodePoint(0x1F4F7);  // ����
+    ph.title = 'Photo evidence  click row to view full details';
+    ph.textContent = String.fromCodePoint(0x1F4F7);  // 
   } else if (report.videoUrl) {
-    ph.title = 'Video evidence ��� click row to view full details';
-    ph.textContent = String.fromCodePoint(0x1F3A5);  // ����
+    ph.title = 'Video evidence  click row to view full details';
+    ph.textContent = String.fromCodePoint(0x1F3A5);  // 
   } else {
     ph.className = 'thumb-placeholder thumb-placeholder--none';
     ph.title = 'No evidence submitted';
-    ph.textContent = String.fromCodePoint(0x1F5BC) + String.fromCharCode(0xFE0F);  // �������
+    ph.textContent = String.fromCodePoint(0x1F5BC) + String.fromCharCode(0xFE0F);  // 
   }
   tdImage.appendChild(ph);
   tr.appendChild(tdImage);
@@ -255,7 +255,7 @@ function buildRow(report, rowNum) {
 
 
 
-  // Status cell ��� click to change
+  // Status cell  click to change
   const tdStatus = document.createElement('td');
   tdStatus.className = 'status-cell status-cell--clickable';
   tdStatus.title = 'Click to change status';
@@ -305,7 +305,7 @@ function buildActionsButton(report, statusCell, categoryCell) {
   const btn = document.createElement('button');
   btn.className = 'actions-btn';
   btn.type = 'button';
-  btn.textContent = 'Actions �������';
+  btn.textContent = 'Actions ';
   btn.setAttribute('aria-haspopup', 'true');
   btn.setAttribute('aria-expanded', 'false');
 
@@ -338,7 +338,7 @@ function toggleDropdown(report, statusCell, categoryCell, wrapper, triggerBtn) {
   const dropdown = document.createElement('div');
   dropdown.className = 'actions-dropdown';
 
-  // ���������������� View Full Details ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  View Full Details 
   const viewBtn = document.createElement('button');
   viewBtn.type = 'button';
   viewBtn.textContent = 'View Full Details';
@@ -348,7 +348,7 @@ function toggleDropdown(report, statusCell, categoryCell, wrapper, triggerBtn) {
     openDetailModal(report);
   });
 
-  // ���������������� Change Status ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Change Status 
   const changeStatusBtn = document.createElement('button');
   changeStatusBtn.type = 'button';
   changeStatusBtn.textContent = 'Change Status';
@@ -358,7 +358,7 @@ function toggleDropdown(report, statusCell, categoryCell, wrapper, triggerBtn) {
     showInlineStatusSelect(report, statusCell);
   });
 
-  // ���������������� Change Category ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Change Category 
   const changeCategoryBtn = document.createElement('button');
   changeCategoryBtn.type = 'button';
   changeCategoryBtn.textContent = 'Change Category';
@@ -368,10 +368,10 @@ function toggleDropdown(report, statusCell, categoryCell, wrapper, triggerBtn) {
     showInlineCategorySelect(report, categoryCell);
   });
 
-  // ���������������� Delete ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Delete 
   const deleteBtn = document.createElement('button');
   deleteBtn.type = 'button';
-  deleteBtn.textContent = '���������� Delete Report';
+  deleteBtn.textContent = ' Delete Report';
   deleteBtn.className = 'actions-dropdown__delete';
   deleteBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -456,9 +456,9 @@ function showCompletionEvidenceModal() {
       <div id="evidence-drop-zone" class="evidence-drop-zone" tabindex="0"
            role="button" aria-label="Click or drag to upload evidence">
         <div class="evidence-drop-zone__inner" id="evidence-drop-inner">
-          <span class="evidence-drop-zone__icon" aria-hidden="true">���������</span>
+          <span class="evidence-drop-zone__icon" aria-hidden="true"></span>
           <p class="evidence-drop-zone__text">Click to choose or drag &amp; drop</p>
-          <p class="evidence-drop-zone__hint">Photo (JPG, PNG) or Video (MP4, MOV) �������� max 100 MB</p>
+          <p class="evidence-drop-zone__hint">Photo (JPG, PNG) or Video (MP4, MOV)  max 100 MB</p>
         </div>
         <input type="file" id="evidence-file-input" accept="image/*,video/*"
                style="display:none" aria-hidden="true" />
@@ -467,7 +467,7 @@ function showCompletionEvidenceModal() {
       <div id="evidence-preview-wrap" style="display:none;margin-top:var(--space-3);">
         <div id="evidence-preview"></div>
         <button id="evidence-remove-btn" class="btn" style="margin-top:var(--space-2);font-size:var(--font-size-xs);color:var(--color-text-secondary);">
-          ������� Remove file
+           Remove file
         </button>
       </div>
 
@@ -478,7 +478,7 @@ function showCompletionEvidenceModal() {
 
 
         <button id="evidence-confirm-btn" class="btn btn--approve" disabled>
-          ������� Mark as Completed
+           Mark as Completed
         </button>
       </div>
     `;
@@ -576,12 +576,12 @@ function showCompletionEvidenceModal() {
 
 
 
-    // Confirm �������� upload then resolve
+    // Confirm  upload then resolve
     confirmBtn.addEventListener('click', async () => {
       confirmBtn.disabled = true;
 
 
-      if (!selectedFile) return;   // file is required ��� button should not be enabled without one
+      if (!selectedFile) return;   // file is required  button should not be enabled without one
 
 
 
@@ -589,7 +589,7 @@ function showCompletionEvidenceModal() {
 
       statusEl.style.display = 'block';
       statusEl.style.color   = 'var(--color-text-secondary)';
-      statusEl.textContent   = '���� Uploading evidence�������';
+      statusEl.textContent   = ' Uploading evidence';
 
       try {
         const url  = await uploadToCloudinary(selectedFile);
@@ -599,7 +599,7 @@ function showCompletionEvidenceModal() {
       } catch (err) {
         console.error('[evidence-upload]', err);
         statusEl.style.color = 'red';
-        statusEl.textContent = '������� Upload failed. Please try again.';
+        statusEl.textContent = ' Upload failed. Please try again.';
         confirmBtn.disabled = false;
 
       }
@@ -633,7 +633,7 @@ document.addEventListener('click', () => closeActiveCustomDropdown());
  * Clicking the same cell again closes it (toggle).
  */
 function showCustomDropdown(anchorCell, options, current, onSelect) {
-  // Toggle ��� if already open for this cell, close it
+  // Toggle  if already open for this cell, close it
   if (activeAnchorCell === anchorCell) {
     closeActiveCustomDropdown();
     return;
@@ -718,7 +718,7 @@ async function openDetailModalWithForm(report, statusCell, pendingStatus) {
   const rid         = report.id;
   const isCompleted = pendingStatus === 'Completed';
 
-  // ������ Build a separate modal overlay ������������������������������������������������������������������������������������������������������������������
+  //  Build a separate modal overlay 
   const backdrop = document.createElement('div');
   backdrop.className = 'modal-overlay';
   backdrop.style.cssText = 'display:flex;z-index:10001;';   // above detail modal
@@ -827,7 +827,7 @@ async function openDetailModalWithForm(report, statusCell, pendingStatus) {
     fileIn?.addEventListener('change', () => { if (fileIn.files[0]) setEvFile(fileIn.files[0]); });
   }
 
-  // Submit ��� only NOW the status changes
+  // Submit  only NOW the status changes
   panel.querySelector('#suf-submit-' + rid)?.addEventListener('click', async () => {
     const titleVal  = panel.querySelector('#suf-title-' + rid)?.value.trim() ?? '';
     const msgVal    = panel.querySelector('#suf-msg-'   + rid)?.value.trim() ?? '';
@@ -933,18 +933,18 @@ async function openDetailModal(report) {
 
   body.innerHTML = '';
 
-  // ���������������� Detail grid ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Detail grid 
   const dl = document.createElement('dl');
   dl.className = 'detail-grid';
 
   const fields = [
-    ['Resident',       report.userName ?? report.residentName ?? '��������'],
-    ['Barangay / Address', report.barangay ?? '��������'],
-    ['Report Ref',     report.reportReference ?? '��������'],
-    ['Category',       report.category ?? '��������'],
-    ['Location',       report.location ?? '��������'],
-    ['Date Submitted', report.submittedAt ? formatDate(report.submittedAt) : '��������'],
-    ['Status',         report.status ?? '��������'],
+    ['Resident',       report.userName ?? report.residentName ?? ''],
+    ['Barangay / Address', report.barangay ?? ''],
+    ['Report Ref',     report.reportReference ?? ''],
+    ['Category',       report.category ?? ''],
+    ['Location',       report.location ?? ''],
+    ['Date Submitted', report.submittedAt ? formatDate(report.submittedAt) : ''],
+    ['Status',         report.status ?? ''],
     ['GPS Coordinates',
       report.latitude != null && report.longitude != null
         ? `${report.latitude}, ${report.longitude}`
@@ -962,7 +962,7 @@ async function openDetailModal(report) {
 
   body.appendChild(dl);
 
-  // ���������������� Full description ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Full description 
   const descHeading = document.createElement('h3');
   descHeading.textContent = 'Description';
   descHeading.style.fontSize = 'var(--font-size-xs)';
@@ -974,12 +974,12 @@ async function openDetailModal(report) {
   const descPara = document.createElement('p');
   descPara.style.fontSize = 'var(--font-size-sm)';
   descPara.style.marginBottom = 'var(--space-4)';
-  descPara.textContent = report.description ?? '��������';
+  descPara.textContent = report.description ?? '';
 
   body.appendChild(descHeading);
   body.appendChild(descPara);
 
-  // ���������������� Evidence (photo + video) ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Evidence (photo + video) 
   if (report.imageUrl || report.videoUrl) {
     const evidenceHeading = document.createElement('h3');
     evidenceHeading.textContent = 'Evidence';
@@ -996,7 +996,7 @@ async function openDetailModal(report) {
 
       const photoLabel = document.createElement('p');
       photoLabel.className = 'evidence-label';
-      photoLabel.textContent = '��������� Photo Evidence';
+      photoLabel.textContent = ' Photo Evidence';
       photoWrap.appendChild(photoLabel);
 
       const img = document.createElement('img');
@@ -1021,7 +1021,7 @@ async function openDetailModal(report) {
 
       const videoLabel = document.createElement('p');
       videoLabel.className = 'evidence-label';
-      videoLabel.textContent = '�������� Video Evidence';
+      videoLabel.textContent = ' Video Evidence';
       videoWrap.appendChild(videoLabel);
 
       const video = document.createElement('video');
@@ -1053,7 +1053,7 @@ async function openDetailModal(report) {
     body.appendChild(noEvidence);
   }
 
-  // ���������������� Status history timeline ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Status history timeline 
   const histHeading = document.createElement('h3');
   histHeading.textContent = 'Status History';
   histHeading.style.fontSize = 'var(--font-size-xs)';
@@ -1082,8 +1082,8 @@ async function openDetailModal(report) {
         .forEach((histDoc) => {
           const data = histDoc.data();
           const li = document.createElement('li');
-          const dateStr = data.updatedAt ? formatDate(data.updatedAt) : '��������';
-          li.textContent = `${data.status} �������� ${dateStr} (by ${data.updatedBy ?? 'unknown'})`;
+          const dateStr = data.updatedAt ? formatDate(data.updatedAt) : '';
+          li.textContent = `${data.status}  ${dateStr} (by ${data.updatedBy ?? 'unknown'})`;
           histList.appendChild(li);
         });
     }
@@ -1203,12 +1203,12 @@ function buildCard(report, rowNum) {
   card.innerHTML = `
     <div class="concern-card__header">
       <span class="concern-card__num">#${rowNum}</span>
-      <span class="concern-card__category">${report.category ?? '��������'}</span>
+      <span class="concern-card__category">${report.category ?? ''}</span>
     </div>
-    <p class="concern-card__resident">${report.userName ?? report.residentName ?? '��������'}</p>
-    <p class="concern-card__desc">${(report.description ?? '').slice(0, 80)}${(report.description ?? '').length > 80 ? '�������' : ''}</p>
+    <p class="concern-card__resident">${report.userName ?? report.residentName ?? ''}</p>
+    <p class="concern-card__desc">${(report.description ?? '').slice(0, 80)}${(report.description ?? '').length > 80 ? '' : ''}</p>
     <div class="concern-card__footer">
-      <span class="concern-card__date">${report.submittedAt ? formatDate(report.submittedAt) : '��������'}</span>
+      <span class="concern-card__date">${report.submittedAt ? formatDate(report.submittedAt) : ''}</span>
     </div>
   `;
 
@@ -1216,7 +1216,7 @@ function buildCard(report, rowNum) {
   const footer = card.querySelector('.concern-card__footer');
   footer?.appendChild(statusBadge(report.status ?? 'Pending'));
 
-  // Card click �������� open detail modal
+  // Card click  open detail modal
   card.addEventListener('click', () => openDetailModal(report));
 
   return card;
@@ -1266,7 +1266,7 @@ export function init(container, uid, barangay) {
   // Render static HTML
   container.innerHTML = SECTION_HTML;
 
-  // ���������������� Firestore real-time subscription ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Firestore real-time subscription 
   // Firestore real-time subscription
   const reportsQuery = barangay
     ? query(collection(db, 'reports'), where('barangay', '==', barangay), orderBy('submittedAt', 'desc'))
@@ -1304,7 +1304,7 @@ export function init(container, uid, barangay) {
     }
   );
 
-  // ���������������� Filter event listeners ������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Filter event listeners 
   container.querySelector('#filter-status')?.addEventListener('change', (e) => {
     currentFilters = { ...currentFilters, status: e.target.value };
     currentPage = 1;
@@ -1327,20 +1327,20 @@ export function init(container, uid, barangay) {
     handleSearch(e.target.value);
   });
 
-  // ���������������� Load More ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Load More 
   container.querySelector('#load-more-btn')?.addEventListener('click', () => {
     currentPage++;
     render(true); // append new rows
   });
 
-  // ���������������� Modal close �������� button ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Modal close  button 
   container.addEventListener('click', (e) => {
     if (e.target.id === 'close-concern-modal') {
       closeDetailModal();
     }
   });
 
-  // ���������������� Modal close �������� Escape key ��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Modal close  Escape key 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       const modal = document.getElementById('concern-detail-modal');
@@ -1349,7 +1349,7 @@ export function init(container, uid, barangay) {
     }
   });
 
-  // ���������������� Close dropdown on outside click ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+  //  Close dropdown on outside click 
   document.addEventListener('click', () => {
     closeActiveDropdown();
   });

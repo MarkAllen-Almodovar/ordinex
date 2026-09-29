@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Firebase Auth guard for protected pages.
  * Redirects to /index.html if the user is not signed in or not an admin/official.
  */
@@ -23,7 +23,7 @@ async function isAdminUser(uid) {
 }
 
 /**
- * Protects the admin page — redirects to login if not signed in or not an admin.
+ * Protects the admin page  redirects to login if not signed in or not an admin.
  * Returns a promise that resolves with the Firebase user when authenticated.
  */
 export function authGuard() {
@@ -35,7 +35,7 @@ export function authGuard() {
       }
       const allowed = await isAdminUser(user.uid);
       if (!allowed) {
-        // Resident trying to access admin panel — boot them back to login
+        // Resident trying to access admin panel  boot them back to login
         await signOut(auth);
         window.location.href = '/index.html';
         return;
@@ -46,7 +46,7 @@ export function authGuard() {
 }
 
 /**
- * For the login page — redirects to admin dashboard if already signed in as admin.
+ * For the login page  redirects to admin dashboard if already signed in as admin.
  */
 export function authGuardLogin() {
   onAuthStateChanged(auth, async (user) => {

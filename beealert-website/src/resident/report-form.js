@@ -1,13 +1,13 @@
-/**
- * Report submission form module — `src/resident/report-form.js`
+﻿/**
+ * Report submission form module  `src/resident/report-form.js`
  *
  * Lazy-loaded by `resident/app.js` when the "Submit Report" tab is activated.
  * Renders the form into the given container and wires up all interactivity.
  *
  * Exports:
- *   init(container, uid)        — main entry point called by app.js
- *   validateReportForm(data)    — pure validation function (also used by tests)
- *   validateImageFile(file)     — pure file size validation (also used by tests)
+ *   init(container, uid)         main entry point called by app.js
+ *   validateReportForm(data)     pure validation function (also used by tests)
+ *   validateImageFile(file)      pure file size validation (also used by tests)
  *
  * Requirements: 4.4, 4.5, 4.7, 4.8
  */
@@ -65,7 +65,7 @@ export function validateReportForm(data) {
 }
 
 /**
- * Validates an image file for upload — rejects files larger than 5 MB.
+ * Validates an image file for upload  rejects files larger than 5 MB.
  *
  * @param {File} file
  * @returns {{ valid: boolean, error?: string }}
@@ -129,7 +129,7 @@ function buildFormHTML() {
           id="report-description"
           name="description"
           rows="4"
-          placeholder="Describe the issue in detail…"
+          placeholder="Describe the issue in detail"
           aria-describedby="desc-error"
           aria-required="true"
         ></textarea>
@@ -168,11 +168,11 @@ function buildFormHTML() {
       <div class="form-group">
         <label>Location (optional)</label>
         <button type="button" id="gps-btn" class="btn btn--secondary">
-          📍 Capture GPS Location
+           Capture GPS Location
         </button>
         <span id="gps-display" class="gps-display">Location not captured</span>
 
-        <!-- Hidden lat/lng — become visible for manual entry on GPS denial -->
+        <!-- Hidden lat/lng  become visible for manual entry on GPS denial -->
         <input type="hidden" id="report-lat" name="lat" />
         <input type="hidden" id="report-lng" name="lng" />
       </div>
@@ -194,8 +194,8 @@ function buildFormHTML() {
 /**
  * Wires up the GPS capture button.
  *
- * On success — populates hidden lat/lng inputs and updates the display span.
- * On error  — shows an informational message and converts the hidden inputs
+ * On success  populates hidden lat/lng inputs and updates the display span.
+ * On error   shows an informational message and converts the hidden inputs
  *             to visible text inputs for manual entry.
  */
 function setupGPS() {
@@ -214,7 +214,7 @@ function setupGPS() {
       return;
     }
 
-    gpsDisplay.textContent = 'Capturing location…';
+    gpsDisplay.textContent = 'Capturing location';
     gpsBtn.disabled = true;
 
     navigator.geolocation.getCurrentPosition(
@@ -314,7 +314,7 @@ async function handleSubmit(event, uid) {
   const lngInput = document.getElementById('report-lng');
   const gpsDisplay = document.getElementById('gps-display');
 
-  // ── Client-side validation ──────────────────────────────────────────────
+  //  Client-side validation 
   const description = descInput?.value ?? '';
   const category = catSelect?.value ?? '';
 
@@ -325,12 +325,12 @@ async function handleSubmit(event, uid) {
 
   if (!valid) return;
 
-  // ── Disable UI while submitting ─────────────────────────────────────────
+  //  Disable UI while submitting 
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Submitting…';
+  submitBtn.textContent = 'Submitting';
 
   try {
-    // ── Optional image upload ─────────────────────────────────────────────
+    //  Optional image upload 
     let imageUrl = null;
     const file = imageInput?.files?.[0];
 
@@ -341,14 +341,14 @@ async function handleSubmit(event, uid) {
       imageUrl = await getDownloadURL(snapshot.ref);
     }
 
-    // ── Fetch resident profile (cached after first read) ──────────────────
+    //  Fetch resident profile (cached after first read) 
     const { residentName, barangay } = await getUserProfile(uid);
 
-    // ── GPS coordinates (may be empty strings) ────────────────────────────
+    //  GPS coordinates (may be empty strings) 
     const lat = latInput?.value ? parseFloat(latInput.value) : null;
     const lng = lngInput?.value ? parseFloat(lngInput.value) : null;
 
-    // ── Write Firestore document ──────────────────────────────────────────
+    //  Write Firestore document 
     await addDoc(collection(db, 'reports'), {
       residentId: uid,
       residentName,
@@ -363,7 +363,7 @@ async function handleSubmit(event, uid) {
       updatedAt: serverTimestamp(),
     });
 
-    // ── Success ───────────────────────────────────────────────────────────
+    //  Success 
     showToast('Report submitted successfully!', 'success');
     resetForm(form, gpsDisplay, latInput, lngInput);
   } catch (err) {
