@@ -12,7 +12,7 @@ import { auth, db } from '../shared/firebase.js';
 const form          = document.getElementById('register-form');
 const nameInput     = document.getElementById('name-input');
 const emailInput    = document.getElementById('email-input');
-const roleInput     = document.getElementById('role-input');
+const barangayInput = document.getElementById('barangay-input');
 const passwordInput = document.getElementById('password-input');
 const confirmInput  = document.getElementById('confirm-input');
 const registerBtn   = document.getElementById('register-btn');
@@ -20,7 +20,7 @@ const authError     = document.getElementById('auth-error');
 const authSuccess   = document.getElementById('auth-success');
 const nameError     = document.getElementById('name-error');
 const emailError    = document.getElementById('email-error');
-const roleError     = document.getElementById('role-error');
+const barangayError = document.getElementById('barangay-error');
 const passwordError = document.getElementById('password-error');
 const confirmError  = document.getElementById('confirm-error');
 const togglePwdBtn  = document.getElementById('toggle-password');
@@ -71,11 +71,11 @@ function validate() {
     valid = false;
   } else { clearErr(emailError); }
 
-  const role = roleInput?.value ?? '';
-  if (!role) {
-    showErr(roleError, 'Please select a role.');
+  const barangay = barangayInput?.value ?? '';
+  if (!barangay) {
+    showErr(barangayError, 'Please select your barangay.');
     valid = false;
-  } else { clearErr(roleError); }
+  } else { clearErr(barangayError); }
 
   const password = passwordInput?.value ?? '';
   if (!password) {
@@ -112,19 +112,20 @@ async function handleRegister(e) {
     const email    = emailInput.value.trim();
     const password = passwordInput.value;
     const name     = nameInput.value.trim();
-    const role     = roleInput.value;
+    const barangay = barangayInput.value;
 
     // Create Firebase Auth account
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     const uid = credential.user.uid;
 
-    // Save profile to Firestore
+    // Save profile to Firestore — role is always 'official' for admin sign-ups
     await setDoc(doc(db, 'users', uid), {
       uid,
       fullName:    name,
       displayName: name,
       email,
-      role,
+      role:        'official',
+      barangay,
       phone:       '',
       createdAt:   serverTimestamp(),
     });
@@ -175,8 +176,8 @@ onAuthStateChanged(auth, async (user) => {
 // ── Event listeners ───────────────────────────────────────────────────────────
 
 form?.addEventListener('submit', handleRegister);
-nameInput?.addEventListener('input',     () => clearErr(nameError));
-emailInput?.addEventListener('input',    () => clearErr(emailError));
-roleInput?.addEventListener('change',    () => clearErr(roleError));
-passwordInput?.addEventListener('input', () => clearErr(passwordError));
-confirmInput?.addEventListener('input',  () => clearErr(confirmError));
+nameInput?.addEventListener('input',      () => clearErr(nameError));
+emailInput?.addEventListener('input',     () => clearErr(emailError));
+barangayInput?.addEventListener('change', () => clearErr(barangayError));
+passwordInput?.addEventListener('input',  () => clearErr(passwordError));
+confirmInput?.addEventListener('input',   () => clearErr(confirmError));
