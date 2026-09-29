@@ -1,9 +1,9 @@
-/* ============================================================
-   BEE-Alerta — main.css
+﻿/* ============================================================
+   BEE-Alerta â€” main.css
    Design tokens, resets, layout, components
    ============================================================ */
 
-/* ── Design Tokens ─────────────────────────────────────────── */
+/* â”€â”€ Design Tokens â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
   /* Brand colours */
   --color-primary:        #F97316;
@@ -79,7 +79,7 @@
   --transition-base: 250ms ease;
 }
 
-/* ── Reset & Base ───────────────────────────────────────────── */
+/* â”€â”€ Reset & Base â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *,
 *::before,
 *::after {
@@ -125,8 +125,8 @@ fieldset {
   padding: 0;
 }
 
-/* ── Accessibility ──────────────────────────────────────────── */
-/* Visually hidden utility — screen-reader only */
+/* â”€â”€ Accessibility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Visually hidden utility â€” screen-reader only */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -146,7 +146,7 @@ fieldset {
   border-radius: var(--radius-sm);
 }
 
-/* ── Auth page layout ───────────────────────────────────────── */
+/* â”€â”€ Auth page layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .auth-body {
   min-height: 100vh;
   background-color: var(--color-bg);
@@ -161,7 +161,7 @@ fieldset {
   max-width: 440px;
 }
 
-/* ── Auth card ──────────────────────────────────────────────── */
+/* â”€â”€ Auth card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .auth-card {
   background: var(--color-surface);
   border-radius: var(--radius-xl);
@@ -211,7 +211,7 @@ fieldset {
   text-align: center;
 }
 
-/* ── Role selector ──────────────────────────────────────────── */
+/* â”€â”€ Role selector â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .role-selector {
   margin-bottom: var(--space-6);
 }
@@ -258,7 +258,7 @@ fieldset {
   pointer-events: none;
 }
 
-/* Selected state — driven by :has() with JS class fallback */
+/* Selected state â€” driven by :has() with JS class fallback */
 .role-card:has(.role-card__input:checked),
 .role-card.is-selected {
   border-color: var(--color-primary);
@@ -298,7 +298,7 @@ fieldset {
   line-height: 1.3;
 }
 
-/* ── Form components ────────────────────────────────────────── */
+/* â”€â”€ Form components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .form-group {
   margin-bottom: var(--space-4);
 }
@@ -417,7 +417,7 @@ fieldset {
   margin-bottom: var(--space-4);
 }
 
-/* ── Buttons ────────────────────────────────────────────────── */
+/* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -478,7 +478,7 @@ fieldset {
   box-shadow: var(--shadow-sm);
 }
 
-/* ── Links ──────────────────────────────────────────────────── */
+/* â”€â”€ Links â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .link {
   color: var(--color-primary);
   font-weight: 600;
@@ -495,7 +495,7 @@ fieldset {
   font-size: var(--font-size-sm);
 }
 
-/* ── Auth register row ──────────────────────────────────────── */
+/* â”€â”€ Auth register row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .auth-register-row {
   text-align: center;
   font-size: var(--font-size-sm);
@@ -503,7 +503,7 @@ fieldset {
   margin-top: var(--space-4);
 }
 
-/* ── Divider ────────────────────────────────────────────────── */
+/* â”€â”€ Divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .divider {
   display: flex;
   align-items: center;
@@ -525,7 +525,7 @@ fieldset {
   letter-spacing: 0.05em;
 }
 
-/* ── Social buttons row ─────────────────────────────────────── */
+/* â”€â”€ Social buttons row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .social-buttons {
   display: flex;
   gap: var(--space-3);
@@ -535,7 +535,7 @@ fieldset {
   flex-shrink: 0;
 }
 
-/* ── Badges ─────────────────────────────────────────────────── */
+/* â”€â”€ Badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -561,7 +561,7 @@ fieldset {
   color: #065F46;
 }
 
-/* ── Toast notifications ────────────────────────────────────── */
+/* â”€â”€ Toast notifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #toast-container {
   position: fixed;
   bottom: var(--space-6);
@@ -628,7 +628,7 @@ fieldset {
   to   { opacity: 0; transform: translateX(20px); }
 }
 
-/* ── Modal / overlay ────────────────────────────────────────── */
+/* â”€â”€ Modal / overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -695,7 +695,7 @@ fieldset {
   to   { opacity: 1; transform: translateY(0)    scale(1);    }
 }
 
-/* ── Loading overlay / spinner ──────────────────────────────── */
+/* â”€â”€ Loading overlay / spinner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .loading-overlay {
   position: fixed;
   inset: 0;
@@ -724,7 +724,7 @@ fieldset {
   to { transform: rotate(360deg); }
 }
 
-/* ── Shared page backgrounds & layout ───────────────────────── */
+/* â”€â”€ Shared page backgrounds & layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .page-bg {
   min-height: 100vh;
   background-color: var(--color-bg);
@@ -738,9 +738,9 @@ fieldset {
   padding: 0 var(--space-6);
 }
 
-/* ── Responsive breakpoints ─────────────────────────────────── */
+/* â”€â”€ Responsive breakpoints â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
-/* Tablet and below (≤ 768px) */
+/* Tablet and below (â‰¤ 768px) */
 @media (max-width: 768px) {
   .auth-card__header {
     padding: var(--space-6) var(--space-6) var(--space-8);
@@ -766,7 +766,7 @@ fieldset {
   }
 }
 
-/* Mobile floor (≤ 360px) */
+/* Mobile floor (â‰¤ 360px) */
 @media (max-width: 360px) {
   .auth-body {
     padding: var(--space-4) var(--space-3);
@@ -786,7 +786,7 @@ fieldset {
   }
 }
 
-/* ── Registration page — wider card ────────────────────────── */
+/* â”€â”€ Registration page â€” wider card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /*
    The registration form has 6 fields so the card gets a bit
    more room than the login card (440 px).
@@ -795,7 +795,7 @@ fieldset {
   max-width: 520px;
 }
 
-/* ── Password strength indicator ───────────────────────────── */
+/* â”€â”€ Password strength indicator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .password-strength {
   display: flex;
   align-items: center;
@@ -804,7 +804,7 @@ fieldset {
   min-height: 1.25rem;   /* reserve space so layout doesn't jump */
 }
 
-/* Track — full-width grey bar */
+/* Track â€” full-width grey bar */
 .password-strength__bar {
   flex: 1;
   height: 4px;
@@ -813,7 +813,7 @@ fieldset {
   overflow: hidden;
 }
 
-/* Fill — animated coloured segment */
+/* Fill â€” animated coloured segment */
 .password-strength__fill {
   height: 100%;
   width: 0%;
@@ -841,7 +841,7 @@ fieldset {
 .password-strength__label--medium { color: var(--color-pending);  }
 .password-strength__label--strong { color: var(--color-success);  }
 
-/* ── Resident layout ──────────────────────────────────── */
+/* â”€â”€ Resident layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .resident-page { min-height: 100vh; background: var(--color-bg); display: flex; flex-direction: column; }
 .resident-header { background: var(--gradient-primary); color: #fff; padding: var(--space-4) var(--space-6); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md); }
 .resident-header__brand { display: flex; align-items: center; gap: var(--space-2); }
@@ -867,7 +867,7 @@ fieldset {
   .resident-content { padding: var(--space-4); }
 }
 
-/* ── Admin layout ───────────────────────────────────────── */
+/* â”€â”€ Admin layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .admin-page { margin: 0; overflow-x: hidden; background: var(--color-bg); }
 .admin-layout { display: flex; min-height: 100vh; }
 .admin-sidebar { width: 240px; min-width: 240px; background: var(--color-surface); border-right: 1px solid var(--color-border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 10; }
@@ -977,7 +977,7 @@ fieldset {
   .filters-bar input { width: 100%; min-width: unset; }
 }
 
-/* ── Settings section ───────────────────────────────────────── */
+/* â”€â”€ Settings section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .settings-section { max-width: 640px; }
 .settings-card { background: var(--color-surface); border-radius: var(--radius-md); padding: var(--space-6); box-shadow: var(--shadow-sm); margin-bottom: var(--space-5); }
 .settings-card__title { font-size: var(--font-size-lg); font-weight: 700; margin-bottom: var(--space-5); color: var(--color-text); }
@@ -1015,7 +1015,7 @@ input[role="switch"]:checked { background: var(--color-primary); }
 input[role="switch"]::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #fff; border-radius: 50%; transition: left var(--transition-fast); box-shadow: var(--shadow-sm); }
 input[role="switch"]:checked::after { left: 22px; }
 
-/* ── Mobile bottom nav ───────────────────────────────────────────── */
+/* â”€â”€ Mobile bottom nav â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .admin-bottom-nav {
   display: none;
 }
@@ -1072,7 +1072,7 @@ input[role="switch"]:checked::after { left: 22px; }
   margin-left: auto;
 }
 
-/* ── Admin notifications section ─────────────────────────────────── */
+/* â”€â”€ Admin notifications section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .notif-section { max-width: 760px; }
 .notif-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
 .notif-mark-all-btn { font-size: var(--font-size-sm); color: var(--color-text-secondary); background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-3); cursor: pointer; }
@@ -1131,7 +1131,7 @@ input[role="switch"]:checked::after { left: 22px; }
 .recent-item__date { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 @media (max-width: 768px) { .stat-cards { grid-template-columns: repeat(2, 1fr); } .charts-row { grid-template-columns: 1fr; } .dash-filter-custom { flex-direction: column; align-items: stretch; } }
 
-/* ── Community Concern Management ─────────────────────────────────────────── */
+/* â”€â”€ Community Concern Management â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .concern-section { }
 .filters-bar { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-4); }
 .filters-bar select, .filters-bar input { padding: var(--space-2) var(--space-3); border: 2px solid var(--color-border); border-radius: var(--radius-md); font-size: var(--font-size-sm); background: var(--color-surface); min-width: 140px; color: var(--color-text); }
@@ -1218,7 +1218,7 @@ input[role="switch"]:checked::after { left: 22px; }
 .evidence-external-link { font-size: var(--font-size-xs); color: var(--color-primary); text-decoration: underline; }
 .no-evidence { font-size: var(--font-size-sm); color: var(--color-text-muted); font-style: italic; margin-bottom: var(--space-4); }
 
-/* ── Post Update card (inside detail modal) ─────────────────────── */
+/* â”€â”€ Post Update card (inside detail modal) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .post-update-section { margin-top: var(--space-5); }
 
@@ -1390,7 +1390,7 @@ input[role="switch"]:checked::after { left: 22px; }
   color: var(--color-primary);
 }
 
-/* ── Status stepper ──────────────────────────────────────────────── */
+/* â”€â”€ Status stepper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .status-stepper {
   display: flex;
@@ -1540,7 +1540,7 @@ input[role="switch"]:checked::after { left: 22px; }
 .status-history-list li { font-size: var(--font-size-xs); color: var(--color-text-secondary); padding: var(--space-1) 0; border-bottom: 1px solid var(--color-border); }
 @media (max-width: 768px) { .table-wrapper { display: none; } .concern-cards { display: block; } }
 
-/* ── Report form (resident) ─────────────────────────────────────── */
+/* â”€â”€ Report form (resident) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #report-form .form-group { margin-bottom: var(--space-4); }
 #report-form label { display: block; font-size: var(--font-size-sm); font-weight: 600; color: var(--color-text); margin-bottom: var(--space-2); }
 #report-form textarea, #report-form select { width: 100%; padding: var(--space-3) var(--space-4); border: 2px solid var(--color-border); border-radius: var(--radius-md); font-size: var(--font-size-sm); color: var(--color-text); background: var(--color-surface); resize: vertical; }
@@ -1552,7 +1552,7 @@ input[role="switch"]:checked::after { left: 22px; }
 .btn--secondary:hover { background: #FFF4E8; }
 select.form-input { padding-left: var(--space-4); }
 
-/* ── My Reports list ─────────────────────────────────────────────── */
+/* â”€â”€ My Reports list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .report-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
 .report-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4); cursor: pointer; transition: box-shadow var(--transition-fast), border-color var(--transition-fast); }
 .report-card:hover { box-shadow: var(--shadow-md); border-color: var(--color-primary-light); }
@@ -1563,13 +1563,13 @@ select.form-input { padding-left: var(--space-4); }
 .report-card__badge { display: flex; }
 .empty-state { text-align: center; padding: var(--space-12); color: var(--color-text-muted); font-size: var(--font-size-sm); }
 
-/* ── Report detail modal rows ────────────────────────────────────── */
+/* â”€â”€ Report detail modal rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .report-detail__row { margin-bottom: var(--space-3); }
 .report-detail__label { display: block; font-size: var(--font-size-xs); font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-1); }
 .report-detail__value { font-size: var(--font-size-sm); color: var(--color-text); }
 .report-detail__image { width: 100%; max-height: 240px; object-fit: cover; border-radius: var(--radius-md); margin-top: var(--space-2); }
 
-/* ── Chatbot UI ──────────────────────────────────────────────────── */
+/* â”€â”€ Chatbot UI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .chatbot-wrapper { display: flex; flex-direction: column; height: calc(100vh - 200px); min-height: 400px; }
 .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); margin-bottom: var(--space-3); }
 .bubble { max-width: 75%; padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); font-size: var(--font-size-sm); line-height: 1.5; word-wrap: break-word; }
@@ -1588,7 +1588,7 @@ select.form-input { padding-left: var(--space-4); }
 .chat-send-btn { padding: var(--space-3) var(--space-5); background: var(--gradient-primary); color: #fff; border: none; border-radius: var(--radius-md); font-size: var(--font-size-sm); font-weight: 600; cursor: pointer; white-space: nowrap; }
 .chat-send-btn:hover { opacity: 0.9; }
 
-/* ── Mobile concern cards ────────────────────────────────────────── */
+/* â”€â”€ Mobile concern cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .concern-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); cursor: pointer; }
 .concern-card__header { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2); }
 .concern-card__num { font-size: var(--font-size-xs); color: var(--color-text-muted); }
@@ -1598,7 +1598,7 @@ select.form-input { padding-left: var(--space-4); }
 .concern-card__footer { display: flex; justify-content: space-between; align-items: center; }
 .concern-card__date { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 
-/* ── Admin OTP login ────────────────────────────────────────── */
+/* â”€â”€ Admin OTP login â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .auth-card__hint {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
@@ -1683,16 +1683,16 @@ select.form-input { padding-left: var(--space-4); }
   text-decoration: underline;
 }
 
-/* ── Forgot password success icon ──────────────────────────── */
+/* â”€â”€ Forgot password success icon â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .reset-success-icon {
   font-size: 3rem;
   text-align: center;
   margin-bottom: var(--space-4);
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    Confirm Residents section
-   ═══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 .confirm-residents-section {
   max-width: 960px;
@@ -1708,7 +1708,7 @@ select.form-input { padding-left: var(--space-4); }
   margin-top: calc(var(--space-1) * -1);
 }
 
-/* ── Filter tabs ───────────────────────────────────────────── */
+/* â”€â”€ Filter tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .resident-filter-tabs {
   display: flex;
@@ -1761,15 +1761,15 @@ select.form-input { padding-left: var(--space-4); }
   color: #fff;
 }
 
-/* ── Residents grid ────────────────────────────────────────── */
+/* â”€â”€ Residents grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .residents-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+.residents-grid {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
 }
-
-/* ── Confirm Residents filters bar ─────────────────────────────────── */
+/* â”€â”€ Confirm Residents filters bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .residents-filters-bar {
   display: flex;
@@ -1901,7 +1901,7 @@ select.form-input { padding-left: var(--space-4); }
   box-shadow: var(--shadow-md);
 }
 
-/* ── Header row: avatar + name/email + status badge ── */
+/* â”€â”€ Header row: avatar + name/email + status badge â”€â”€ */
 
 .resident-card__header {
   display: flex;
@@ -1932,10 +1932,10 @@ select.form-input { padding-left: var(--space-4); }
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: var(--space-1);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  margin-bottom: var(--space-1);
+  word-break: break-word;
+  overflow: visible;
+
 
 .resident-card__role-badge {
   display: inline-block;
@@ -1958,7 +1958,7 @@ select.form-input { padding-left: var(--space-4); }
   color: var(--color-primary);
 }
 
-/* ── Body: details + ID side by side ── */
+/* â”€â”€ Body: details + ID side by side â”€â”€ */
 
 .resident-card__body {
   display: grid;
@@ -2000,7 +2000,7 @@ select.form-input { padding-left: var(--space-4); }
   margin-top: var(--space-1);
 }
 
-/* ── Valid ID section ── */
+/* â”€â”€ Valid ID section â”€â”€ */
 
 .resident-card__id-section {
   display: flex;
@@ -2091,7 +2091,7 @@ select.form-input { padding-left: var(--space-4); }
   flex-wrap: wrap;
 }
 
-/* ── Approve / Reject buttons ──────────────────────────────── */
+/* â”€â”€ Approve / Reject buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .btn--approve {
   flex: 1;
@@ -2127,14 +2127,14 @@ select.form-input { padding-left: var(--space-4); }
   background: #fecaca;
 }
 
-/* ── Rejected badge ────────────────────────────────────────── */
+/* â”€â”€ Rejected badge â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .badge--rejected {
   background: #fee2e2;
   color: #991b1b;
 }
 
-/* ── Empty state ───────────────────────────────────────────── */
+/* â”€â”€ Empty state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .residents-empty {
   text-align: center;
@@ -2151,7 +2151,7 @@ select.form-input { padding-left: var(--space-4); }
   font-size: var(--font-size-sm);
 }
 
-/* ── Skeleton loader ───────────────────────────────────────── */
+/* â”€â”€ Skeleton loader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .residents-skeleton {
   display: grid;
@@ -2176,7 +2176,7 @@ select.form-input { padding-left: var(--space-4); }
   100% { background-position: -200% 0; }
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
+/* â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @media (max-width: 480px) {
   .residents-grid {
