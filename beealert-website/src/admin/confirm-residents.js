@@ -277,6 +277,9 @@ function buildCard(resident) {
       </div>
       <div class="resident-card__header-info">
         <p class="resident-card__name">${safeName}</p>
+        <p class="resident-card__role-badge resident-card__role-badge--${resident.role === 'official' ? 'official' : 'resident'}">
+          ${resident.role === 'official' ? 'B. Official' : 'Resident'}
+        </p>
         <p class="resident-card__meta resident-card__email">
           <span class="resident-card__meta-icon" aria-hidden="true">âœ‰</span>
           ${escapeHtml(resident.email ?? 'â€”')}

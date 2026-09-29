@@ -1916,6 +1916,27 @@ select.form-input { padding-left: var(--space-4); }
   text-overflow: ellipsis;
 }
 
+.resident-card__role-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-1);
+}
+
+.resident-card__role-badge--resident {
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+}
+
+.resident-card__role-badge--official {
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--color-primary);
+}
+
 /* ── Body: details + ID side by side ── */
 
 .resident-card__body {
