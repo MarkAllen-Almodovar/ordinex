@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: const Column(
                     children: [
-                      AppLogo(size: 56, blendWithBackground: false),
+                      AppLogo(size: 56, blendWithBackground: true),
                       SizedBox(height: 12),
                       Text(
                         appName,

@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         const Row(
                           children: [
-                            const AppLogo(size: 22, blendWithBackground: false),
+                            const AppLogo(size: 22, blendWithBackground: true),
                             const SizedBox(width: 6),
                             const Text('BEE-Alert',
                                 style: TextStyle(
