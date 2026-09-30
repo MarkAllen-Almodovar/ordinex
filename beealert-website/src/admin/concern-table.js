@@ -90,7 +90,7 @@ export function applyFilters(reports, { status = 'All', category = 'All', search
 
   return reports.filter((report) => {
     if (status !== 'All' && report.status !== status) return false;
-    if (category !== 'All' && report.category !== category) return false;
+    if (category !== 'All' && (report.category ?? '').toLowerCase() !== category.toLowerCase()) return false;
     if (needle) {
       const inDescription  = (report.description  ?? '').toLowerCase().includes(needle);
       const inResident     = (report.userName ?? report.residentName ?? '').toLowerCase().includes(needle);
@@ -132,11 +132,11 @@ const SECTION_HTML = `
     </select>
     <select id="filter-category">
       <option value="All">All Categories</option>
-      <option>Improper Garbage Disposal</option>
-      <option>Illegal Parking</option>
-      <option>Noise Disturbances</option>
-      <option>Public Disturbance</option>
-      <option>Others</option>
+      <option value="Health">Health</option>
+      <option value="Transportation">Transportation</option>
+      <option value="Environment">Environment</option>
+      <option value="Consumer Issue">Consumer Issue</option>
+      <option value="Others">Others</option>
     </select>
     <input type="text" id="filter-search" placeholder="Search by resident or description..." />
   </div>
