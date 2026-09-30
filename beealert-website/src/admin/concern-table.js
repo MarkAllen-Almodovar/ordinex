@@ -1014,11 +1014,13 @@ async function openDetailModal(report) {
     ddBrgy.textContent = report.barangay ?? '';
   }
 
-  // Insert Barangay row after Resident row
-  const firstDd = dl.querySelector('dd');
-  if (firstDd && firstDd.parentNode) {
-    dl.insertBefore(ddBrgy, firstDd.nextSibling.nextSibling ?? null);
-    dl.insertBefore(dtBrgy, ddBrgy);
+
+  // Insert Barangay row after Resident (children[0]=dt, children[1]=dd, children[2]=Report Ref dt)
+  const dlChildren = Array.from(dl.children);
+  const insertBeforeNode = dlChildren[2] ?? null; // before Report Ref dt
+  if (insertBeforeNode) {
+    dl.insertBefore(dtBrgy, insertBeforeNode);
+    dl.insertBefore(ddBrgy, insertBeforeNode);
   } else {
     dl.appendChild(dtBrgy);
     dl.appendChild(ddBrgy);
