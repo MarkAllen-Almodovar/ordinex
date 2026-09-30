@@ -177,8 +177,9 @@ let allReports      = [];
 let currentFilters  = { status: 'All', category: 'All', search: '' };
 let currentPage     = 1;
 let unsubscribe     = null;   // Firestore listener cleanup
-let currentUid      = null;   // Admin UID for status-history writes
-let currentAdminRole = 'admin'; // 'admin' | 'official'
+let currentUid        = null;   // Admin UID for status-history writes
+let currentAdminEmail = null;   // Admin email shown in status history
+let currentAdminRole  = 'admin'; // 'admin' | 'official'
 
 // ---------------------------------------------------------------------------
 // Rendering helpers
@@ -855,6 +856,7 @@ async function openDetailModalWithForm(report, statusCell, pendingStatus) {
         status: pendingStatus,
         updatedAt: serverTimestamp(),
         updatedBy: currentUid,
+        updatedByEmail: currentAdminEmail ?? null,
         updateTitle: titleVal || null,
         updateMessage: msgVal,
         ...(evUrl ? { evidenceUrl: evUrl, evidenceType: evType } : {}),
@@ -1149,7 +1151,9 @@ async function openDetailModal(report) {
           const data = histDoc.data();
           const li = document.createElement('li');
           const dateStr = data.updatedAt ? formatDate(data.updatedAt) : '';
-          li.textContent = `${data.status}  ${dateStr} (by ${data.updatedBy ?? 'unknown'})`;
+          // Prefer stored email; fall back to UID for older entries
+          const byLabel = data.updatedByEmail ?? data.updatedBy ?? 'unknown';
+          li.textContent = `${data.status}  ${dateStr} (by ${byLabel})`;
           histList.appendChild(li);
         });
     }
@@ -1313,16 +1317,20 @@ function debounce(fn, delay) {
  * Initialise the Community Concern Management section.
  * Called once by admin/app.js when the section is first activated.
  *
- * @param {HTMLElement} container - The section container element.
- * @param {string}      uid       - Firebase Auth UID of the logged-in official.
+ * @param {HTMLElement} container  - The section container element.
+ * @param {string}      uid        - Firebase Auth UID of the logged-in official.
+ * @param {string}      barangay   - Barangay filter (null for super-admin).
+ * @param {string}      adminRole  - 'admin' | 'official'
+ * @param {string}      adminEmail - Firebase Auth email of the logged-in official.
  */
-export function init(container, uid, barangay, adminRole) {
+export function init(container, uid, barangay, adminRole, adminEmail) {
   // Reset module state
-  allReports     = [];
-  currentFilters = { status: 'All', category: 'All', search: '' };
-  currentPage    = 1;
-  currentUid      = uid;
-  currentAdminRole = adminRole ?? 'admin';
+  allReports        = [];
+  currentFilters    = { status: 'All', category: 'All', search: '' };
+  currentPage       = 1;
+  currentUid        = uid;
+  currentAdminEmail = adminEmail ?? null;
+  currentAdminRole  = adminRole ?? 'admin';
 
   if (unsubscribe) {
     unsubscribe();

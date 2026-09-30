@@ -38,7 +38,7 @@ async function activateSection(sectionName, user, barangay, adminRole) {
     try {
       const module = await SECTION_MODULES[sectionName]();
       if (typeof module?.init === 'function') {
-        module.init(container, user?.uid, barangay, adminRole);
+        module.init(container, user?.uid, barangay, adminRole, user?.email);
       }
     } catch (err) {
       console.error(`[admin/app] Failed to load section "${sectionName}":`, err);
@@ -52,7 +52,7 @@ async function activateSection(sectionName, user, barangay, adminRole) {
       try {
         const module = await SECTION_MODULES[sectionName]();
         if (typeof module?.init === 'function') {
-          module.init(container, user?.uid, barangay, adminRole);
+          module.init(container, user?.uid, barangay, adminRole, user?.email);
         }
       } catch (err) {
         console.error(`[admin/app] Failed to reload section "${sectionName}":`, err);
