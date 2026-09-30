@@ -178,7 +178,7 @@ let currentFilters  = { status: 'All', category: 'All', search: '' };
 let currentPage     = 1;
 let unsubscribe     = null;   // Firestore listener cleanup
 let currentUid      = null;   // Admin UID for status-history writes
-let activeDropdown  = null;   // Currently open actions dropdown element
+let currentAdminRole = 'admin'; // 'admin' | 'official'
 
 // ---------------------------------------------------------------------------
 // Rendering helpers
@@ -939,7 +939,6 @@ async function openDetailModal(report) {
 
   const fields = [
     ['Resident',       report.userName ?? report.residentName ?? ''],
-    ['Barangay / Address', report.barangay ?? ''],
     ['Report Ref',     report.reportReference ?? ''],
     ['Category',       report.category ?? ''],
     ['Location',       report.location ?? ''],
@@ -959,6 +958,71 @@ async function openDetailModal(report) {
     dl.appendChild(dt);
     dl.appendChild(dd);
   });
+
+  // Barangay field — editable dropdown for admin role only
+  const dtBrgy = document.createElement('dt');
+  dtBrgy.textContent = 'Barangay / Address';
+  const ddBrgy = document.createElement('dd');
+
+  if (currentAdminRole === 'admin') {
+    const BARANGAYS = [
+      'Agtipal','Arosip','Bacqui','Bacsil','Bagutot','Ballogo','Baroro','Bitalag',
+      'Bulala','Burayoc','Bussaoit','Cabaroan','Cabarsican','Cabugao','Calautit',
+      'Carcarmay','Casiaman','Galongen','Guinabang','Legleg','Lisqueb',
+      'Mabanengbeng 1st','Mabanengbeng 2nd','Maragayap','Nangalisan','Nagatiran',
+      'Nagsaraboan','Nagsimbaanan','Narra','Ortega','Paagan','Pandan','Pang-pang',
+      'Poblacion','Quirino','Raois','Salincob','San Martin','Santa Cruz','Santa rita',
+      'Sapilang','Sayoan','Sipulo','Tammocalao','Ubbog','Oya-oy','Zaragoza'
+    ];
+
+    const sel = document.createElement('select');
+    sel.className = 'detail-barangay-select';
+    sel.title = 'Change barangay';
+
+    const blankOpt = document.createElement('option');
+    blankOpt.value = '';
+    blankOpt.textContent = '— Select barangay —';
+    sel.appendChild(blankOpt);
+
+    BARANGAYS.forEach(b => {
+      const opt = document.createElement('option');
+      opt.value = b;
+      opt.textContent = b;
+      if (b === (report.barangay ?? '')) opt.selected = true;
+      sel.appendChild(opt);
+    });
+
+    sel.addEventListener('change', async () => {
+      const newBarangay = sel.value;
+      if (!newBarangay) return;
+      try {
+        await updateDoc(doc(db, 'reports', report.id), {
+          barangay: newBarangay,
+          updatedAt: serverTimestamp(),
+        });
+        report.barangay = newBarangay;
+        showToast('Barangay updated to "' + newBarangay + '".', 'success');
+      } catch (err) {
+        console.error('[detail] barangay update failed:', err);
+        showToast('Failed to update barangay. Please try again.', 'error');
+        sel.value = report.barangay ?? '';
+      }
+    });
+
+    ddBrgy.appendChild(sel);
+  } else {
+    ddBrgy.textContent = report.barangay ?? '';
+  }
+
+  // Insert Barangay row after Resident row
+  const firstDd = dl.querySelector('dd');
+  if (firstDd && firstDd.parentNode) {
+    dl.insertBefore(ddBrgy, firstDd.nextSibling.nextSibling ?? null);
+    dl.insertBefore(dtBrgy, ddBrgy);
+  } else {
+    dl.appendChild(dtBrgy);
+    dl.appendChild(ddBrgy);
+  }
 
   body.appendChild(dl);
 
@@ -1250,13 +1314,13 @@ function debounce(fn, delay) {
  * @param {HTMLElement} container - The section container element.
  * @param {string}      uid       - Firebase Auth UID of the logged-in official.
  */
-export function init(container, uid, barangay) {
+export function init(container, uid, barangay, adminRole) {
   // Reset module state
   allReports     = [];
   currentFilters = { status: 'All', category: 'All', search: '' };
   currentPage    = 1;
-  currentUid     = uid;
-  activeDropdown = null;
+  currentUid      = uid;
+  currentAdminRole = adminRole ?? 'admin';
 
   if (unsubscribe) {
     unsubscribe();

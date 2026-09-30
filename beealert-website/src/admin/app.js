@@ -15,7 +15,7 @@ const SECTION_MODULES = {
 
 const initialisedSections = new Set();
 
-async function activateSection(sectionName, user, barangay) {
+async function activateSection(sectionName, user, barangay, adminRole) {
   document.querySelectorAll('.admin-nav__link').forEach((link) => {
     if (link.dataset.section === sectionName) {
       link.classList.add('is-active');
@@ -38,7 +38,7 @@ async function activateSection(sectionName, user, barangay) {
     try {
       const module = await SECTION_MODULES[sectionName]();
       if (typeof module?.init === 'function') {
-        module.init(container, user?.uid, barangay);
+        module.init(container, user?.uid, barangay, adminRole);
       }
     } catch (err) {
       console.error(`[admin/app] Failed to load section "${sectionName}":`, err);
@@ -52,7 +52,7 @@ async function activateSection(sectionName, user, barangay) {
       try {
         const module = await SECTION_MODULES[sectionName]();
         if (typeof module?.init === 'function') {
-          module.init(container, user?.uid, barangay);
+          module.init(container, user?.uid, barangay, adminRole);
         }
       } catch (err) {
         console.error(`[admin/app] Failed to reload section "${sectionName}":`, err);
@@ -84,9 +84,11 @@ async function init() {
   // Fetch the admin's own profile to get their barangay
   // Super-admins (role: 'admin') have no barangay filter  they see everything
   let adminBarangay = null;
+  let adminRole = 'admin';
   try {
     const snap = await getDoc(doc(db, 'users', user.uid));
     const data = snap.data() ?? {};
+    adminRole = data.role ?? 'admin';
     if (data.role === 'official' && data.barangay) {
       adminBarangay = data.barangay;
     }
@@ -110,7 +112,7 @@ async function init() {
       e.preventDefault();
       const section = link.dataset.section;
       if (section) {
-        activateSection(section, user, adminBarangay);
+        activateSection(section, user, adminBarangay, adminRole);
         // Sync bottom nav active state
         document.querySelectorAll('.admin-bottom-nav__btn').forEach(b =>
           b.classList.toggle('is-active', b.dataset.section === section)
@@ -125,7 +127,7 @@ async function init() {
     btn.addEventListener('click', () => {
       const section = btn.dataset.section;
       if (section) {
-        activateSection(section, user, adminBarangay);
+        activateSection(section, user, adminBarangay, adminRole);
         // Sync active state on bottom nav
         document.querySelectorAll('.admin-bottom-nav__btn').forEach(b =>
           b.classList.toggle('is-active', b.dataset.section === section)
@@ -147,7 +149,7 @@ async function init() {
     });
   });
 
-  activateSection('dashboard', user, adminBarangay);
+  activateSection('dashboard', user, adminBarangay, adminRole);
 }
 
 init();

@@ -1208,6 +1208,21 @@ input[role="switch"]:checked::after { left: 22px; }
 .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3) var(--space-6); margin-bottom: var(--space-4); }
 .detail-grid dt { font-size: var(--font-size-xs); font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
 .detail-grid dd { font-size: var(--font-size-sm); color: var(--color-text); margin: 0; }
+.detail-barangay-select {
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+.detail-barangay-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
 .modal-section-heading { font-size: var(--font-size-xs); font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin: var(--space-4) 0 var(--space-2); }
 .evidence-wrap { display: flex; flex-direction: column; gap: var(--space-4); margin-bottom: var(--space-4); }
 .evidence-item { display: flex; flex-direction: column; gap: var(--space-2); }
