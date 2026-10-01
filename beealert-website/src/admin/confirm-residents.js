@@ -144,7 +144,49 @@ const SECTION_HTML = `
     </div>
 </div>
 
-<!-- Ban modal — styled to match the Update Status modal -->
+<!-- Unban confirmation modal -->
+<div id="unban-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="unban-modal-title" hidden>
+    <div class="modal">
+        <button class="modal__close" id="unban-modal-close" aria-label="Close">&times;</button>
+
+        <h2 class="modal__title" id="unban-modal-title">
+            Unban Resident &rarr;
+            <span class="status-update-form-wrap__badge" id="unban-modal-name-badge" style="background:#e0e7ff;color:#3730a3;border:1px solid #a5b4fc;"></span>
+        </h2>
+        <p style="font-size:var(--font-size-sm);color:var(--color-text-secondary);margin-bottom:var(--space-5);">
+            This resident is currently banned. Review the ban details below before lifting it.
+        </p>
+
+        <div id="unban-modal-details" style="
+            background:#fff7ed;
+            border:1px solid #fed7aa;
+            border-radius:var(--radius-md);
+            padding:var(--space-4);
+            display:flex;
+            flex-direction:column;
+            gap:var(--space-3);
+            margin-bottom:var(--space-5);
+        ">
+            <div style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--font-size-sm);">
+                <span style="font-size:1rem;">&#128683;</span>
+                <span id="unban-modal-remaining" style="font-weight:600;color:#92400e;"></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--font-size-sm);color:var(--color-text-secondary);">
+                <span style="font-size:1rem;">&#128197;</span>
+                <span id="unban-modal-until"></span>
+            </div>
+        </div>
+
+        <p style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-bottom:var(--space-5);">
+            Lifting the ban will immediately allow this resident to submit reports again.
+        </p>
+
+        <div style="display:flex;gap:var(--space-3);justify-content:flex-end;">
+            <button class="btn" id="unban-modal-cancel" style="min-width:90px;">Cancel</button>
+            <button class="btn btn--primary" id="unban-modal-confirm" style="min-width:140px;background:#3730a3;">Lift Ban</button>
+        </div>
+    </div>
+</div>
 <div id="ban-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ban-modal-title" hidden>
     <div class="modal">
         <button class="modal__close" id="ban-modal-close" aria-label="Close">&times;</button>
@@ -412,7 +454,7 @@ function buildActionsDropdown(resident, uid, status, displayName) {
                 unbanItem.addEventListener('click', e => {
                     e.stopPropagation();
                     closeActiveResidentDropdown();
-                    _dispatchAction('unban', uid);
+                    openUnbanModal(uid, displayName, resident.bannedUntil);
                 });
                 dropdown.appendChild(unbanItem);
             } else {
@@ -598,6 +640,58 @@ async function handleAction(uid, action, adminUid) {
         render();
         showToast('Action failed. Please try again.', 'error');
     }
+}
+
+// ---------------------------------------------------------------------------
+// Unban confirmation modal
+// ---------------------------------------------------------------------------
+
+let unbanModalUid  = null;
+let unbanModalName = null;
+
+function openUnbanModal(uid, name, bannedUntilTs) {
+    unbanModalUid  = uid;
+    unbanModalName = name;
+
+    const overlay   = document.getElementById('unban-modal-overlay');
+    const badgeEl   = document.getElementById('unban-modal-name-badge');
+    const remaining = document.getElementById('unban-modal-remaining');
+    const untilEl   = document.getElementById('unban-modal-until');
+    if (!overlay) return;
+
+    if (badgeEl) badgeEl.textContent = name || 'Resident';
+
+    // Calculate time remaining
+    const until = typeof bannedUntilTs?.toDate === 'function'
+        ? bannedUntilTs.toDate()
+        : new Date(bannedUntilTs);
+
+    const msLeft  = until - Date.now();
+    const hLeft   = Math.floor(msLeft / 3600000);
+    const mLeft   = Math.floor((msLeft % 3600000) / 60000);
+
+    let timeLeft;
+    if (hLeft > 0) {
+        timeLeft = hLeft + ' hour' + (hLeft !== 1 ? 's' : '') +
+            (mLeft > 0 ? ' and ' + mLeft + ' minute' + (mLeft !== 1 ? 's' : '') : '');
+    } else {
+        timeLeft = mLeft + ' minute' + (mLeft !== 1 ? 's' : '');
+    }
+
+    if (remaining) remaining.textContent = 'Ban lifts in: ' + timeLeft;
+    if (untilEl)   untilEl.textContent   = 'Until: ' + until.toLocaleString('en-PH', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', hour12: false,
+    });
+
+    overlay.hidden = false;
+}
+
+function closeUnbanModal() {
+    unbanModalUid  = null;
+    unbanModalName = null;
+    const overlay = document.getElementById('unban-modal-overlay');
+    if (overlay) overlay.hidden = true;
 }
 
 // ---------------------------------------------------------------------------
@@ -796,6 +890,18 @@ export function init(container, uid, barangay, adminRole) {
     });
     document.getElementById('ban-hours')?.addEventListener('keydown', e => {
         if (e.key === 'Enter') confirmBan(uid);
+    });
+
+    // Unban modal wiring
+    document.getElementById('unban-modal-close')?.addEventListener('click', closeUnbanModal);
+    document.getElementById('unban-modal-cancel')?.addEventListener('click', closeUnbanModal);
+    document.getElementById('unban-modal-confirm')?.addEventListener('click', () => {
+        const targetUid = unbanModalUid;
+        closeUnbanModal();
+        handleUnban(targetUid, uid);
+    });
+    document.getElementById('unban-modal-overlay')?.addEventListener('click', e => {
+        if (e.target === document.getElementById('unban-modal-overlay')) closeUnbanModal();
     });
 
     // Firestore listener
