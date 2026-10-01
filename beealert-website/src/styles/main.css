@@ -1613,6 +1613,88 @@ select.form-input { padding-left: var(--space-4); }
 .concern-card__footer { display: flex; justify-content: space-between; align-items: center; }
 .concern-card__date { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 
+/* ── Login role tabs ──────────────────────────────────────────────────── */
+
+.login-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.login-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-3);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast),
+              background var(--transition-fast);
+  white-space: nowrap;
+}
+
+.login-tab svg {
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.login-tab:hover {
+  color: var(--color-primary);
+  background: var(--color-surface-alt);
+}
+
+.login-tab:hover svg {
+  opacity: 1;
+}
+
+.login-tab.is-active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  background: var(--color-surface);
+}
+
+.login-tab.is-active svg {
+  opacity: 1;
+}
+
+/* Admin tab accent — shield icon gets orange tint when active */
+.login-tab[data-role="admin"].is-active {
+  color: var(--color-primary);
+}
+
+/* Official tab accent — slightly different shade to distinguish */
+.login-tab[data-role="official"].is-active {
+  color: var(--color-primary);
+}
+
+/* Panel transitions */
+[role="tabpanel"] {
+  animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* Mobile: stack icon above label if needed */
+@media (max-width: 360px) {
+  .login-tab {
+    font-size: var(--font-size-xs);
+    padding: var(--space-3) var(--space-2);
+    gap: var(--space-1);
+  }
+}
+
 /*  Admin OTP login  */
 .auth-card__hint {
   font-size: var(--font-size-sm);
