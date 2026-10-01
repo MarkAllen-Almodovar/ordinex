@@ -189,11 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280))),
               ),
             ]),
-            const SizedBox(height: 14),
-            const Text(
-              'If you believe this is a mistake, please contact your barangay office.',
-              style: TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
-            ),
+
           ],
         ),
         actions: [
