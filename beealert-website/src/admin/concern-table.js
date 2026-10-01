@@ -956,7 +956,37 @@ async function openDetailModal(report) {
     const dt = document.createElement('dt');
     dt.textContent = label;
     const dd = document.createElement('dd');
-    dd.textContent = value;
+
+    // Make Location and GPS Coordinates clickable map links
+    if (label === 'GPS Coordinates' && value !== 'Not captured') {
+      const [lat, lng] = value.split(',').map(s => s.trim());
+      const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(lat)},${encodeURIComponent(lng)}&z=17`;
+      const a = document.createElement('a');
+      a.href      = mapUrl;
+      a.target    = '_blank';
+      a.rel       = 'noopener noreferrer';
+      a.textContent = value;
+      a.className = 'map-link';
+      dd.appendChild(a);
+    } else if (label === 'Location' && value) {
+      // Try GPS coords first; fall back to text search
+      let mapUrl;
+      if (report.latitude != null && report.longitude != null) {
+        mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(report.latitude)},${encodeURIComponent(report.longitude)}&z=17`;
+      } else {
+        mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(value)}`;
+      }
+      const a = document.createElement('a');
+      a.href      = mapUrl;
+      a.target    = '_blank';
+      a.rel       = 'noopener noreferrer';
+      a.textContent = value;
+      a.className = 'map-link';
+      dd.appendChild(a);
+    } else {
+      dd.textContent = value;
+    }
+
     dl.appendChild(dt);
     dl.appendChild(dd);
   });

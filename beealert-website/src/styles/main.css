@@ -1747,6 +1747,25 @@ select.form-input { padding-left: var(--space-4); }
   text-decoration: underline;
 }
 
+/* Clickable map link in report detail */
+.map-link {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.map-link::after {
+  content: '\2197';
+  font-size: 0.75em;
+  opacity: 0.7;
+}
+.map-link:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
 .form-success--block {
   background-color: var(--color-success-bg);
   color: var(--color-success);
