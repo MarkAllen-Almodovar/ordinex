@@ -1798,7 +1798,7 @@ select.form-input { padding-left: var(--space-4); }
     */
 
 .confirm-residents-section {
-  max-width: 960px;
+  width: 100%;
 }
 
 .confirm-residents-header {
