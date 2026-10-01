@@ -89,6 +89,129 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onNavTap(int index) => setState(() => _currentIndex = index);
+  // ---------------------------------------------------------------------------
+  // Ban check
+  // ---------------------------------------------------------------------------
+
+  Future<void> _onReportConcernTap() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      try {
+        final snap = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .get();
+        final data        = snap.data() ?? {};
+        final bannedField = data['bannedUntil'];
+        if (bannedField != null) {
+          DateTime? bannedUntil;
+          if (bannedField is Timestamp) {
+            bannedUntil = bannedField.toDate();
+          } else {
+            bannedUntil = DateTime.tryParse(bannedField.toString());
+          }
+          if (bannedUntil != null && bannedUntil.isAfter(DateTime.now())) {
+            if (!mounted) return;
+            _showBanDialog(bannedUntil);
+            return;
+          }
+        }
+      } catch (_) {
+        // If check fails, allow navigation
+      }
+    }
+    if (!mounted) return;
+    Navigator.of(context).pushNamed('/report-form');
+  }
+
+  void _showBanDialog(DateTime bannedUntil) {
+    final remaining = bannedUntil.difference(DateTime.now());
+    final hours     = remaining.inHours;
+    final minutes   = remaining.inMinutes % 60;
+    String timeLeft;
+    if (hours > 0) {
+      timeLeft = '$hours hour${hours != 1 ? "s" : ""}'
+          '${minutes > 0 ? " and $minutes minute${minutes != 1 ? "s" : ""}" : ""}';
+    } else {
+      timeLeft = '$minutes minute${minutes != 1 ? "s" : ""}';
+    }
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(
+          children: [
+            Icon(Icons.block, color: Colors.red, size: 26),
+            SizedBox(width: 10),
+            Text('Account Banned',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.red.shade200),
+              ),
+              child: const Text(
+                'Your account has been temporarily banned by the barangay '
+                'administrator. You cannot submit new reports during the ban period.',
+                style: TextStyle(fontSize: 13, color: Colors.red),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Row(children: [
+              const Icon(Icons.timer_outlined, size: 16, color: Color(0xFF6B7280)),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text('Ban lifts in: $timeLeft',
+                    style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF374151))),
+              ),
+            ]),
+            const SizedBox(height: 6),
+            Row(children: [
+              const Icon(Icons.calendar_today_outlined, size: 16, color: Color(0xFF6B7280)),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                    'Until: ${bannedUntil.toLocal().toString().substring(0, 16)}',
+                    style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280))),
+              ),
+            ]),
+            const SizedBox(height: 14),
+            const Text(
+              'If you believe this is a mistake, please contact your barangay office.',
+              style: TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ),
+            child: const Text('OK, understood'),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   Widget _buildBody() {
     switch (_currentIndex) {
