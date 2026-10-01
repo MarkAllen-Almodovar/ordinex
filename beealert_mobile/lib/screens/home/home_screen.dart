@@ -163,8 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 border: Border.all(color: Colors.red.shade200),
               ),
               child: const Text(
-                'Your account has been temporarily banned by the barangay '
-                'administrator. You cannot submit new reports during the ban period.',
+                'Your account has been temporarily banned. You cannot submit new reports during the ban period.',
                 style: TextStyle(fontSize: 13, color: Colors.red),
               ),
             ),

@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -873,7 +873,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
                 border: Border.all(color: Colors.red.shade200),
               ),
               child: const Text(
-                'Your account has been temporarily banned by the barangay administrator. '
+                'Your account has been temporarily banned. '
                 'You are not allowed to submit new reports during the ban period.',
                 style: TextStyle(fontSize: 13, color: Colors.red),
               ),
