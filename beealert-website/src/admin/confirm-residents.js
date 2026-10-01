@@ -9,6 +9,7 @@ import {
     addDoc,
     doc,
     serverTimestamp,
+    Timestamp,
 } from 'firebase/firestore';
 import { showToast } from '../shared/ui-helpers.js';
 
@@ -76,6 +77,9 @@ const SECTION_HTML = `
         <button class="resident-filter-tab" data-filter="rejected" role="tab" aria-selected="false">
             Rejected <span class="resident-filter-tab__count" id="count-rejected">0</span>
         </button>
+        <button class="resident-filter-tab" data-filter="banned" role="tab" aria-selected="false">
+            Banned <span class="resident-filter-tab__count" id="count-banned">0</span>
+        </button>
         <button class="resident-filter-tab" data-filter="all" role="tab" aria-selected="false">All</button>
     </div>
 
@@ -139,16 +143,51 @@ const SECTION_HTML = `
         <div class="resident-skeleton-card"></div>
     </div>
 </div>
+
+<!-- Ban modal (shared, lives outside section so z-index works) -->
+<div id="ban-modal-overlay" class="ban-modal-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="ban-modal-title">
+    <div class="ban-modal">
+        <div class="ban-modal__header">
+            <h3 class="ban-modal__title" id="ban-modal-title">Ban Resident</h3>
+            <button class="ban-modal__close" id="ban-modal-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="ban-modal__body">
+            <p class="ban-modal__name" id="ban-modal-name"></p>
+            <label class="ban-modal__label" for="ban-hours">Ban duration (hours)</label>
+            <input class="ban-modal__input" type="number" id="ban-hours"
+                   min="1" max="8760" placeholder="e.g. 24" />
+            <p class="ban-modal__hint">The resident will be blocked from submitting reports for the specified number of hours.</p>
+            <span class="form-error" id="ban-hours-error" role="alert" hidden></span>
+        </div>
+        <div class="ban-modal__footer">
+            <button class="btn" id="ban-modal-cancel">Cancel</button>
+            <button class="btn btn--ban" id="ban-modal-confirm">Ban Resident</button>
+        </div>
+    </div>
+</div>
 `;
 
 // ---------------------------------------------------------------------------
 // Filtering
 // ---------------------------------------------------------------------------
 
+function isBanned(r) {
+    if (!r.bannedUntil) return false;
+    const until = typeof r.bannedUntil.toDate === 'function'
+        ? r.bannedUntil.toDate()
+        : new Date(r.bannedUntil);
+    return until > new Date();
+}
+
 function applyFilters() {
     const needle = currentSearch.trim().toLowerCase();
     return allResidents.filter(r => {
-        if (currentFilter !== 'all' && (r.status ?? 'pending') !== currentFilter) return false;
+        // banned is a virtual filter — check bannedUntil regardless of status
+        if (currentFilter === 'banned') {
+            if (!isBanned(r)) return false;
+        } else if (currentFilter !== 'all') {
+            if ((r.status ?? 'pending') !== currentFilter) return false;
+        }
         if (currentBarangay) {
             const rb = (r.barangay ?? '').toLowerCase();
             if (!rb.includes(currentBarangay.toLowerCase())) return false;
@@ -259,7 +298,7 @@ function buildRow(resident, rowNum) {
     // Status badge
     const tdStatus = document.createElement('td');
     tdStatus.className = 'status-cell';
-    tdStatus.appendChild(createStatusBadge(status));
+    tdStatus.appendChild(createStatusBadge(status, resident));
     tr.appendChild(tdStatus);
 
     // Actions
@@ -295,22 +334,63 @@ function buildRow(resident, rowNum) {
         btn.dataset.uid    = uid;
         tdActions.appendChild(btn);
     }
+
+    // Ban / Unban button (shown for approved residents only)
+    if (status === 'approved' || isBanned(resident)) {
+        const banBtn = document.createElement('button');
+        banBtn.style.marginLeft = '4px';
+        if (isBanned(resident)) {
+            banBtn.className      = 'btn btn--unban';
+            banBtn.textContent    = 'Unban';
+            banBtn.dataset.action = 'unban';
+            banBtn.dataset.uid    = uid;
+        } else {
+            banBtn.className      = 'btn btn--ban';
+            banBtn.textContent    = 'Ban';
+            banBtn.dataset.action = 'ban';
+            banBtn.dataset.uid    = uid;
+            banBtn.dataset.name   = displayName;
+        }
+        tdActions.appendChild(banBtn);
+    }
+
     tr.appendChild(tdActions);
 
     return tr;
 }
 
-function createStatusBadge(status) {
+function createStatusBadge(status, resident) {
     const map = {
         pending:  { cls: 'badge--pending',   label: 'Pending'  },
         approved: { cls: 'badge--completed', label: 'Approved' },
         rejected: { cls: 'badge--rejected',  label: 'Rejected' },
     };
+
+    const wrap = document.createElement('div');
+    wrap.style.display = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.gap = '4px';
+
+    // Main status badge
     const { cls, label } = map[status] ?? { cls: 'badge--pending', label: status };
     const el = document.createElement('span');
     el.className   = 'badge ' + cls;
     el.textContent = label;
-    return el;
+    wrap.appendChild(el);
+
+    // Ban badge (shown when actively banned)
+    if (isBanned(resident)) {
+        const until = typeof resident.bannedUntil.toDate === 'function'
+            ? resident.bannedUntil.toDate()
+            : new Date(resident.bannedUntil);
+        const banEl = document.createElement('span');
+        banEl.className = 'badge badge--banned';
+        banEl.title     = 'Banned until ' + until.toLocaleString('en-PH');
+        banEl.textContent = 'Banned';
+        wrap.appendChild(banEl);
+    }
+
+    return wrap;
 }
 
 // ---------------------------------------------------------------------------
@@ -366,10 +446,11 @@ function render() {
 }
 
 function updateCounts() {
-    const counts = { pending: 0, approved: 0, rejected: 0 };
+    const counts = { pending: 0, approved: 0, rejected: 0, banned: 0 };
     allResidents.forEach(r => {
         const s = r.status ?? 'pending';
         if (counts[s] !== undefined) counts[s]++;
+        if (isBanned(r)) counts.banned++;
     });
     Object.entries(counts).forEach(([status, count]) => {
         const el = document.getElementById('count-' + status);
@@ -425,6 +506,117 @@ async function handleAction(uid, action, adminUid) {
         if (resident) resident.status = action === 'approve' ? 'rejected' : 'approved';
         render();
         showToast('Action failed. Please try again.', 'error');
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Ban modal
+// ---------------------------------------------------------------------------
+
+let banModalUid  = null;
+let banModalName = null;
+
+function openBanModal(uid, name) {
+    banModalUid  = uid;
+    banModalName = name;
+    const overlay   = document.getElementById('ban-modal-overlay');
+    const nameEl    = document.getElementById('ban-modal-name');
+    const hoursEl   = document.getElementById('ban-hours');
+    const errorEl   = document.getElementById('ban-hours-error');
+    if (!overlay) return;
+    if (nameEl)  nameEl.textContent = 'Resident: ' + name;
+    if (hoursEl) hoursEl.value = '';
+    if (errorEl) { errorEl.textContent = ''; errorEl.hidden = true; }
+    overlay.hidden = false;
+    hoursEl?.focus();
+}
+
+function closeBanModal() {
+    banModalUid  = null;
+    banModalName = null;
+    const overlay = document.getElementById('ban-modal-overlay');
+    if (overlay) overlay.hidden = true;
+}
+
+async function confirmBan(adminUid) {
+    const hoursEl = document.getElementById('ban-hours');
+    const errorEl = document.getElementById('ban-hours-error');
+    const hours   = parseInt(hoursEl?.value ?? '', 10);
+
+    if (!hours || hours < 1) {
+        if (errorEl) { errorEl.textContent = 'Enter a valid number of hours (minimum 1).'; errorEl.hidden = false; }
+        hoursEl?.focus();
+        return;
+    }
+    if (hours > 8760) {
+        if (errorEl) { errorEl.textContent = 'Maximum ban duration is 8760 hours (1 year).'; errorEl.hidden = false; }
+        hoursEl?.focus();
+        return;
+    }
+
+    const uid  = banModalUid;
+    const name = banModalName;
+    closeBanModal();
+
+    const bannedUntil = Timestamp.fromDate(new Date(Date.now() + hours * 60 * 60 * 1000));
+
+    // Optimistic update
+    const resident = allResidents.find(r => r.id === uid);
+    if (resident) resident.bannedUntil = bannedUntil;
+    render();
+
+    try {
+        await updateDoc(doc(db, 'users', uid), {
+            bannedUntil,
+            bannedBy:  adminUid,
+            bannedAt:  serverTimestamp(),
+        });
+
+        // Notify the resident via their notifications subcollection
+        await addDoc(collection(db, 'users', uid, 'notifications'), {
+            type:      'account_banned',
+            title:     'Account Temporarily Banned',
+            body:      'Your account has been temporarily banned for ' + hours + ' hour' + (hours !== 1 ? 's' : '') + '. You will not be able to submit reports during this period.',
+            read:      false,
+            createdAt: serverTimestamp(),
+        });
+
+        showToast(name + ' has been banned for ' + hours + ' hour' + (hours !== 1 ? 's' : '') + '.', 'success');
+    } catch (err) {
+        console.error('[confirm-residents] ban error:', err);
+        if (resident) resident.bannedUntil = null;
+        render();
+        showToast('Failed to ban resident. Please try again.', 'error');
+    }
+}
+
+async function handleUnban(uid, adminUid) {
+    const resident = allResidents.find(r => r.id === uid);
+    if (resident) resident.bannedUntil = null;
+    render();
+
+    try {
+        await updateDoc(doc(db, 'users', uid), {
+            bannedUntil: null,
+            unbannedBy:  adminUid,
+            unbannedAt:  serverTimestamp(),
+        });
+
+        const name = resident?.displayName ?? resident?.fullName ?? 'Resident';
+        await addDoc(collection(db, 'users', uid, 'notifications'), {
+            type:      'account_unbanned',
+            title:     'Account Ban Lifted',
+            body:      'Your account ban has been lifted. You can now submit reports again.',
+            read:      false,
+            createdAt: serverTimestamp(),
+        });
+
+        showToast(name + ' has been unbanned.', 'success');
+    } catch (err) {
+        console.error('[confirm-residents] unban error:', err);
+        if (resident) resident.bannedUntil = 'restore'; // re-render will re-check
+        render();
+        showToast('Failed to unban resident. Please try again.', 'error');
     }
 }
 
@@ -505,8 +697,23 @@ export function init(container, uid, barangay, adminRole) {
     container.addEventListener('click', e => {
         const btn = e.target.closest('[data-action]');
         if (!btn) return;
-        const { action, uid: targetUid } = btn.dataset;
-        if (action && targetUid) handleAction(targetUid, action, uid);
+        const { action, uid: targetUid, name } = btn.dataset;
+        if (!action || !targetUid) return;
+
+        if (action === 'ban')   { openBanModal(targetUid, name ?? ''); return; }
+        if (action === 'unban') { handleUnban(targetUid, uid); return; }
+        handleAction(targetUid, action, uid);
+    });
+
+    // Ban modal wiring
+    document.getElementById('ban-modal-close')?.addEventListener('click', closeBanModal);
+    document.getElementById('ban-modal-cancel')?.addEventListener('click', closeBanModal);
+    document.getElementById('ban-modal-confirm')?.addEventListener('click', () => confirmBan(uid));
+    document.getElementById('ban-modal-overlay')?.addEventListener('click', e => {
+        if (e.target === document.getElementById('ban-modal-overlay')) closeBanModal();
+    });
+    document.getElementById('ban-hours')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') confirmBan(uid);
     });
 
     // Firestore listener

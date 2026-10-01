@@ -2232,6 +2232,177 @@ select.form-input { padding-left: var(--space-4); }
   color: #991b1b;
 }
 
+/* ── Ban / Unban buttons ──────────────────────────────────────────────────── */
+
+.btn--ban {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  background: #fef3c7;
+  color: #92400e;
+  transition: background var(--transition-fast);
+}
+.btn--ban:hover { background: #fde68a; }
+
+.btn--unban {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  background: #e0e7ff;
+  color: #3730a3;
+  transition: background var(--transition-fast);
+}
+.btn--unban:hover { background: #c7d2fe; }
+
+/* ── Ban badge ────────────────────────────────────────────────────────────── */
+
+.badge--banned {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+/* ── Ban modal ────────────────────────────────────────────────────────────── */
+
+.ban-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: var(--space-4);
+}
+
+.ban-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  animation: banModalIn 0.18s ease;
+}
+
+@keyframes banModalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+.ban-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  background: #fff7ed;
+  border-bottom: 1px solid #fed7aa;
+}
+
+.ban-modal__title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: #92400e;
+  margin: 0;
+}
+
+.ban-modal__close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #92400e;
+  cursor: pointer;
+  padding: 0 var(--space-1);
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+.ban-modal__close:hover { opacity: 1; }
+
+.ban-modal__body {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ban-modal__name {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+}
+
+.ban-modal__label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.ban-modal__input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition: border-color var(--transition-fast);
+  box-sizing: border-box;
+}
+.ban-modal__input:focus {
+  outline: none;
+  border-color: #f59e0b;
+}
+
+.ban-modal__hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.ban-modal__footer {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+}
+
+/* mobile */
+@media (max-width: 480px) {
+  .ban-modal__footer {
+    flex-direction: column-reverse;
+  }
+  .ban-modal__footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /*  Empty state  */
 
 .residents-empty {
