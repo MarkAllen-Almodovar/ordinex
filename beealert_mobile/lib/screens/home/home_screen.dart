@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../widgets/app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -221,8 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () =>
-                        Navigator.of(context).pushNamed('/report-form'),
+                    onPressed: _onReportConcernTap,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: gradientStart,
                       padding:
