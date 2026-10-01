@@ -301,63 +301,144 @@ function buildRow(resident, rowNum) {
     tdStatus.appendChild(createStatusBadge(status, resident));
     tr.appendChild(tdStatus);
 
-    // Actions
+    // Actions dropdown
     const tdActions = document.createElement('td');
     tdActions.className = 'actions-cell';
-    if (status === 'pending') {
-        const confirmBtn = document.createElement('button');
-        confirmBtn.className        = 'btn btn--approve';
-        confirmBtn.style.marginRight = '4px';
-        confirmBtn.textContent      = 'Confirm';
-        confirmBtn.dataset.action   = 'approve';
-        confirmBtn.dataset.uid      = uid;
-        tdActions.appendChild(confirmBtn);
-
-        const rejectBtn = document.createElement('button');
-        rejectBtn.className      = 'btn btn--reject';
-        rejectBtn.textContent    = 'Reject';
-        rejectBtn.dataset.action = 'reject';
-        rejectBtn.dataset.uid    = uid;
-        tdActions.appendChild(rejectBtn);
-    } else if (status === 'approved') {
-        const btn = document.createElement('button');
-        btn.className      = 'btn btn--reject';
-        btn.textContent    = 'Revoke';
-        btn.dataset.action = 'reject';
-        btn.dataset.uid    = uid;
-        tdActions.appendChild(btn);
-    } else {
-        const btn = document.createElement('button');
-        btn.className      = 'btn btn--approve';
-        btn.textContent    = 'Re-approve';
-        btn.dataset.action = 'approve';
-        btn.dataset.uid    = uid;
-        tdActions.appendChild(btn);
-    }
-
-    // Ban / Unban button (shown for approved residents only)
-    if (status === 'approved' || isBanned(resident)) {
-        const banBtn = document.createElement('button');
-        banBtn.style.marginLeft = '4px';
-        if (isBanned(resident)) {
-            banBtn.className      = 'btn btn--unban';
-            banBtn.textContent    = 'Unban';
-            banBtn.dataset.action = 'unban';
-            banBtn.dataset.uid    = uid;
-        } else {
-            banBtn.className      = 'btn btn--ban';
-            banBtn.textContent    = 'Ban';
-            banBtn.dataset.action = 'ban';
-            banBtn.dataset.uid    = uid;
-            banBtn.dataset.name   = displayName;
-        }
-        tdActions.appendChild(banBtn);
-    }
-
+    tdActions.appendChild(buildActionsDropdown(resident, uid, status, displayName));
     tr.appendChild(tdActions);
 
     return tr;
 }
+
+// ---------------------------------------------------------------------------
+// Actions dropdown
+// ---------------------------------------------------------------------------
+
+let activeResidentDropdown = null;
+
+function closeActiveResidentDropdown() {
+    if (activeResidentDropdown) {
+        activeResidentDropdown.remove();
+        activeResidentDropdown = null;
+    }
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', () => closeActiveResidentDropdown());
+
+function buildActionsDropdown(resident, uid, status, displayName) {
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+
+    const btn = document.createElement('button');
+    btn.className = 'actions-btn';
+    btn.type      = 'button';
+    btn.textContent = 'Actions \u25BE'; // ▾
+    btn.setAttribute('aria-haspopup', 'true');
+    btn.setAttribute('aria-expanded', 'false');
+
+    btn.addEventListener('click', e => {
+        e.stopPropagation();
+
+        // Close any other open dropdown
+        if (activeResidentDropdown && !wrapper.contains(activeResidentDropdown)) {
+            closeActiveResidentDropdown();
+        }
+
+        const existing = wrapper.querySelector('.actions-dropdown');
+        if (existing) {
+            existing.remove();
+            activeResidentDropdown = null;
+            btn.setAttribute('aria-expanded', 'false');
+            return;
+        }
+
+        const dropdown = document.createElement('div');
+        dropdown.className = 'actions-dropdown';
+        activeResidentDropdown = dropdown;
+        btn.setAttribute('aria-expanded', 'true');
+
+        // ── Approve ──
+        if (status === 'pending' || status === 'rejected') {
+            const approveItem = document.createElement('button');
+            approveItem.type        = 'button';
+            approveItem.textContent = status === 'pending' ? 'Confirm' : 'Re-approve';
+            approveItem.className   = 'actions-dropdown__approve';
+            approveItem.addEventListener('click', e => {
+                e.stopPropagation();
+                closeActiveResidentDropdown();
+                // Dispatch through the existing event delegation path
+                const fake = { dataset: { action: 'approve', uid } };
+                _dispatchAction(fake.dataset.action, fake.dataset.uid);
+            });
+            dropdown.appendChild(approveItem);
+        }
+
+        // ── Reject / Revoke ──
+        if (status === 'pending' || status === 'approved') {
+            const rejectItem = document.createElement('button');
+            rejectItem.type        = 'button';
+            rejectItem.textContent = status === 'approved' ? 'Revoke' : 'Reject';
+            rejectItem.className   = 'actions-dropdown__delete';
+            rejectItem.addEventListener('click', e => {
+                e.stopPropagation();
+                closeActiveResidentDropdown();
+                _dispatchAction('reject', uid);
+            });
+            dropdown.appendChild(rejectItem);
+        }
+
+        // ── Ban / Unban (approved residents only) ──
+        if (status === 'approved' || isBanned(resident)) {
+            const separator = document.createElement('div');
+            separator.style.cssText = 'height:1px;background:var(--color-border);margin:4px 0;';
+            dropdown.appendChild(separator);
+
+            if (isBanned(resident)) {
+                const unbanItem = document.createElement('button');
+                unbanItem.type        = 'button';
+                unbanItem.textContent = 'Unban';
+                unbanItem.className   = 'actions-dropdown__unban';
+                unbanItem.addEventListener('click', e => {
+                    e.stopPropagation();
+                    closeActiveResidentDropdown();
+                    _dispatchAction('unban', uid);
+                });
+                dropdown.appendChild(unbanItem);
+            } else {
+                const banItem = document.createElement('button');
+                banItem.type        = 'button';
+                banItem.textContent = 'Ban';
+                banItem.className   = 'actions-dropdown__ban';
+                banItem.addEventListener('click', e => {
+                    e.stopPropagation();
+                    closeActiveResidentDropdown();
+                    openBanModal(uid, displayName);
+                });
+                dropdown.appendChild(banItem);
+            }
+        }
+
+        wrapper.appendChild(dropdown);
+    });
+
+    wrapper.appendChild(btn);
+    return wrapper;
+}
+
+// Internal dispatcher so dropdown items can trigger the same action handler
+// as the old data-action delegation
+let _adminUidRef = null; // set during init
+
+function _dispatchAction(action, targetUid) {
+    if (action === 'ban')   { return; } // handled inline via openBanModal
+    if (action === 'unban') { handleUnban(targetUid, _adminUidRef); return; }
+    handleAction(targetUid, action, _adminUidRef);
+}
+
+// ---------------------------------------------------------------------------
+// Build status badge
+// ---------------------------------------------------------------------------
 
 function createStatusBadge(status, resident) {
     const map = {
@@ -630,6 +711,9 @@ export function init(container, uid, barangay, adminRole) {
     }
     if (!container) return;
 
+    // Store admin UID for dropdown action callbacks
+    _adminUidRef = uid;
+
     container.innerHTML = SECTION_HTML;
 
     // Filter tabs
@@ -692,18 +776,6 @@ export function init(container, uid, barangay, adminRole) {
             render();
         });
     }
-
-    // Action delegation (event bubbling)
-    container.addEventListener('click', e => {
-        const btn = e.target.closest('[data-action]');
-        if (!btn) return;
-        const { action, uid: targetUid, name } = btn.dataset;
-        if (!action || !targetUid) return;
-
-        if (action === 'ban')   { openBanModal(targetUid, name ?? ''); return; }
-        if (action === 'unban') { handleUnban(targetUid, uid); return; }
-        handleAction(targetUid, action, uid);
-    });
 
     // Ban modal wiring
     document.getElementById('ban-modal-close')?.addEventListener('click', closeBanModal);

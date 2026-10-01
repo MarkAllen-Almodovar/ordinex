@@ -1203,6 +1203,12 @@ input[role="switch"]:checked::after { left: 22px; }
 .actions-dropdown button { display: block; width: 100%; padding: var(--space-3) var(--space-4); background: none; border: none; text-align: left; font-size: var(--font-size-sm); cursor: pointer; color: var(--color-text); }
 .actions-dropdown button:hover { background: var(--color-surface-alt); color: var(--color-primary); }
 .actions-dropdown__delete { color: #dc2626 !important; border-top: 1px solid var(--color-border) !important; margin-top: var(--space-1) !important; }
+.actions-dropdown__approve { color: #059669 !important; font-weight: 600 !important; }
+.actions-dropdown__approve:hover { background: #d1fae5 !important; }
+.actions-dropdown__ban  { color: #92400e !important; }
+.actions-dropdown__ban:hover  { background: #fef3c7 !important; }
+.actions-dropdown__unban { color: #3730a3 !important; }
+.actions-dropdown__unban:hover { background: #e0e7ff !important; }
 .concern-cards { display: none; }
 .modal--wide { max-width: 600px; max-height: 90vh; overflow-y: auto; }
 .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3) var(--space-6); margin-bottom: var(--space-4); }
