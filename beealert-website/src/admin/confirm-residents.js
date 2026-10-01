@@ -144,24 +144,34 @@ const SECTION_HTML = `
     </div>
 </div>
 
-<!-- Ban modal (shared, lives outside section so z-index works) -->
-<div id="ban-modal-overlay" class="ban-modal-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="ban-modal-title">
-    <div class="ban-modal">
-        <div class="ban-modal__header">
-            <h3 class="ban-modal__title" id="ban-modal-title">Ban Resident</h3>
-            <button class="ban-modal__close" id="ban-modal-close" aria-label="Close">&times;</button>
+<!-- Ban modal — styled to match the Update Status modal -->
+<div id="ban-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ban-modal-title" hidden>
+    <div class="modal">
+        <button class="modal__close" id="ban-modal-close" aria-label="Close">&times;</button>
+
+        <h2 class="modal__title" id="ban-modal-title">
+            Ban Resident &rarr;
+            <span class="status-update-form-wrap__badge" id="ban-modal-name-badge" style="background:#fef3c7;color:#92400e;border:1px solid #f59e0b;"></span>
+        </h2>
+        <p style="font-size:var(--font-size-sm);color:var(--color-text-secondary);margin-bottom:var(--space-4);">
+            Enter the ban duration below. The resident will be blocked from submitting reports until the ban expires.
+        </p>
+
+        <label class="post-update-card__label" for="ban-hours">BAN DURATION <span style="color:red">*</span></label>
+        <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-2);">
+            <input class="post-update-card__input" type="number" id="ban-hours"
+                   min="1" max="8760" placeholder="e.g. 24"
+                   style="max-width:160px;margin-bottom:0;" />
+            <span style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">hours</span>
         </div>
-        <div class="ban-modal__body">
-            <p class="ban-modal__name" id="ban-modal-name"></p>
-            <label class="ban-modal__label" for="ban-hours">Ban duration (hours)</label>
-            <input class="ban-modal__input" type="number" id="ban-hours"
-                   min="1" max="8760" placeholder="e.g. 24" />
-            <p class="ban-modal__hint">The resident will be blocked from submitting reports for the specified number of hours.</p>
-            <span class="form-error" id="ban-hours-error" role="alert" hidden></span>
-        </div>
-        <div class="ban-modal__footer">
-            <button class="btn" id="ban-modal-cancel">Cancel</button>
-            <button class="btn btn--ban" id="ban-modal-confirm">Ban Resident</button>
+        <p style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-bottom:var(--space-5);">
+            Minimum 1 hour &mdash; Maximum 8760 hours (1 year).
+        </p>
+        <span class="form-error" id="ban-hours-error" role="alert" hidden style="display:block;margin-bottom:var(--space-3);"></span>
+
+        <div style="display:flex;gap:var(--space-3);justify-content:flex-end;">
+            <button class="btn" id="ban-modal-cancel" style="min-width:90px;">Cancel</button>
+            <button class="btn btn--primary" id="ban-modal-confirm" style="min-width:160px;">Ban Resident</button>
         </div>
     </div>
 </div>
@@ -601,13 +611,13 @@ function openBanModal(uid, name) {
     banModalUid  = uid;
     banModalName = name;
     const overlay   = document.getElementById('ban-modal-overlay');
-    const nameEl    = document.getElementById('ban-modal-name');
+    const badgeEl   = document.getElementById('ban-modal-name-badge');
     const hoursEl   = document.getElementById('ban-hours');
     const errorEl   = document.getElementById('ban-hours-error');
     if (!overlay) return;
-    if (nameEl)  nameEl.textContent = 'Resident: ' + name;
-    if (hoursEl) hoursEl.value = '';
-    if (errorEl) { errorEl.textContent = ''; errorEl.hidden = true; }
+    if (badgeEl)  badgeEl.textContent = name || 'Resident';
+    if (hoursEl)  hoursEl.value = '';
+    if (errorEl)  { errorEl.textContent = ''; errorEl.hidden = true; }
     overlay.hidden = false;
     hoursEl?.focus();
 }
